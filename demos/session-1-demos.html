@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WCTD Level III · Session 1 Interactive Demos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#12141f; --navy-2:#1a1d2e; --navy-3:#252a40; --slate:#4a5066; --line:#2f3550;
+    --cyan:#00ced1; --cyan-soft:#7fe9ea; --orange:#ffa500; --orange-soft:#ffce7a;
+    --purple:#483d8b; --purple-soft:#9d8cff; --paper:#f7f8fc; --red:#ff6b6b; --green:#2ecc71;
+    --heading:"Inter",system-ui,sans-serif; --mono:"JetBrains Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:var(--heading);color:#fff;min-height:100vh;line-height:1.5;
+    background:
+      linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/40px 40px,
+      linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/40px 40px,
+      radial-gradient(ellipse at 75% -10%,#2a2350 0%,var(--navy) 60%) fixed;
+    background-color:var(--navy);}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 24px 48px}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(0,206,209,.15);color:var(--cyan-soft);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+  .pill i{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+  h1{font-weight:800;letter-spacing:-.02em;font-size:clamp(2rem,5vw,3rem);margin:14px 0 4px}
+  h1 span{color:var(--cyan)}
+  .sub{color:rgba(255,255,255,.75);margin:0 0 22px;max-width:700px}
+  nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+  nav a{color:rgba(255,255,255,.8);text-decoration:none;font-weight:600;font-size:14px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+  nav a .n{font-family:var(--mono);color:var(--cyan);margin-right:6px}
+  nav a[aria-current="page"]{background:var(--cyan);color:var(--navy);border-color:var(--cyan)}
+  nav a[aria-current="page"] .n{color:var(--navy)}
+  .panel{background:var(--navy-2);border:1px solid var(--line);border-radius:16px;padding:24px}
+  .eyebrow{font-family:var(--mono);font-size:13px;color:var(--cyan);margin:0}
+  h2{font-weight:800;letter-spacing:-.02em;margin:4px 0 6px;font-size:1.7rem}
+  .lede{color:rgba(255,255,255,.75);margin:0 0 18px;max-width:780px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:820px){.cols{grid-template-columns:1fr}}
+  .box{background:var(--navy-3);border-radius:12px;padding:16px;border:1px solid var(--line)}
+  .box h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6)}
+  code,.code{font-family:var(--mono)}
+  .code{background:#0d0f18;border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:15px;white-space:pre-wrap;word-break:break-word;color:#e9ecf5}
+  .k{color:var(--purple-soft)} .v{color:var(--cyan-soft)} .s{color:var(--orange-soft)} .c{color:#7a819c} .p{color:#fff}
+  button,.btn{font:600 14px var(--heading);border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;padding:8px 14px;cursor:pointer}
+  button:hover{background:rgba(255,255,255,.12)}
+  button.primary{background:var(--orange);color:var(--navy);border-color:var(--orange)}
+  button.primary:hover{filter:brightness(1.08)}
+  button:disabled{opacity:.35;cursor:not-allowed}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .chip{font-family:var(--mono);font-size:13px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.05)}
+  .tip{margin-top:16px;padding:12px 16px;border-left:3px solid var(--orange);background:rgba(255,165,0,.08);border-radius:0 10px 10px 0;color:rgba(255,255,255,.88)}
+  .tip b{color:var(--orange-soft)}
+  table.vars{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:14px}
+  table.vars td{padding:7px 8px;border-bottom:1px solid var(--line)}
+  table.vars td:first-child{color:var(--cyan-soft);width:40%}
+  .undef{color:var(--red)}
+  .hidden{display:none}
+  /* Destructuring */
+  .prop{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:7px 8px;border-radius:9px;border:1px solid transparent;cursor:pointer}
+  .prop:hover{background:rgba(255,255,255,.04)}
+  .prop.on{border-color:var(--cyan);background:rgba(0,206,209,.08)}
+  .prop .key{font-family:var(--mono);color:var(--cyan-soft)}
+  .prop .val{font-family:var(--mono);color:var(--orange-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .prop .ctl{display:flex;gap:4px}
+  .prop .ctl button{padding:3px 8px;font-size:12px}
+  .prop.missing .val{color:#7a819c;text-decoration:line-through}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:14px}
+  .seg button{border:0;border-radius:0;background:transparent}
+  .seg button.on{background:var(--cyan);color:var(--navy)}
+  input[type=range]{accent-color:var(--cyan);width:200px}
+  /* Mutation */
+  .heap{display:grid;gap:12px}
+  .ref{display:grid;grid-template-columns:110px 34px 1fr;align-items:center;gap:6px}
+  .ref .name{font-family:var(--mono);color:var(--cyan-soft);text-align:right}
+  .ref .arrow{color:rgba(255,255,255,.5);font-size:20px;text-align:center}
+  .arr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 10px;border-radius:10px;border:2px solid;min-height:46px}
+  .arr .addr{font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;color:var(--navy)}
+  .item{font-family:var(--mono);font-size:12.5px;padding:4px 8px;border-radius:7px;background:rgba(255,255,255,.07)}
+  .item.done{background:rgba(46,204,113,.2)}
+  .item.flash,.arr.flash{animation:flash 1.1s ease}
+  @keyframes flash{0%{box-shadow:0 0 0 3px var(--red);background:rgba(255,107,107,.35)}100%{box-shadow:none}}
+  .verdict{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .verdict div{padding:12px;border-radius:10px;background:var(--navy-3);border:1px solid var(--line);font-size:14px}
+  .verdict b{display:block;font-size:20px}
+  .good{color:var(--green)} .bad{color:var(--red)}
+  .actions{display:grid;gap:8px}
+  .actions button{text-align:left;font-family:var(--mono);font-size:13px;font-weight:400;display:flex;justify-content:space-between;gap:10px}
+  .actions button small{font-family:var(--heading);font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px}
+  small.mut{background:rgba(255,107,107,.2);color:var(--red)}
+  small.imm{background:rgba(46,204,113,.2);color:var(--green)}
+  /* Pipeline */
+  .palette{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .palette button{font-family:var(--mono);font-size:13px;font-weight:400}
+  .stage{display:grid;grid-template-columns:28px 1fr;gap:10px;margin-top:10px}
+  .stage .num{width:28px;height:28px;border-radius:50%;background:var(--purple);display:grid;place-items:center;font-weight:800;font-size:13px}
+  .stage .op{font-family:var(--mono);font-size:14px;color:var(--cyan-soft);margin-bottom:6px}
+  .out{display:flex;flex-wrap:wrap;gap:6px}
+  .big{font:800 2.4rem/1 var(--heading);color:var(--orange)}
+  .cat-transport{border-left:3px solid var(--cyan)} .cat-food{border-left:3px solid var(--orange)}
+  .cat-energy{border-left:3px solid var(--purple-soft)} .cat-waste{border-left:3px solid var(--green)}
+  select{font:inherit;font-family:var(--mono);font-size:13px;background:var(--navy-3);color:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+  /* Promises */
+  .lanes{display:grid;gap:10px;margin-top:6px}
+  .lane{display:grid;grid-template-columns:120px 1fr 70px;align-items:center;gap:10px;font-size:14px}
+  .lane .label{font-family:var(--mono);color:var(--cyan-soft)}
+  .track{position:relative;height:28px;border-radius:7px;background:rgba(255,255,255,.05);overflow:hidden}
+  .bar{position:absolute;top:0;bottom:0;border-radius:7px;background:var(--cyan);opacity:.85;width:0}
+  .bar.fail{background:var(--red)}
+  .lane .t{font-family:var(--mono);text-align:right;color:rgba(255,255,255,.75)}
+  .axis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:#7a819c;margin:4px 0 0 130px;padding-right:80px}
+  .total{font:800 2rem/1 var(--heading)}
+  label.check{display:flex;gap:8px;align-items:center;font-size:14px;color:rgba(255,255,255,.8)}
+  footer{margin-top:22px;color:rgba(255,255,255,.5);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="pill"><i></i>WCTD Level III · Session 1</span>
+  <h1>Interactive <span>demos.</span></h1>
+  <p class="sub">Click, toggle and break things. Each demo shows one idea from today's session. Watch what changes, and try to predict it before you click.</p>
+
+  <nav aria-label="Demos">
+    <a href="#destructuring"><span class="n">10a</span>Destructuring Playground</a>
+    <a href="#mutation"><span class="n">10b</span>Mutation Detective</a>
+    <a href="#pipeline"><span class="n">11a</span>Pipeline Builder</a>
+    <a href="#promises"><span class="n">11b</span>Promise Race</a>
+  </nav>
+
+  <!-- ================================================================ -->
+  <section id="view-destructuring" class="panel">
+    <p class="eyebrow">&gt; section_10 / destructuring</p>
+    <h2>Destructuring Playground</h2>
+    <p class="lede">Destructuring pulls values out of an object or array into variables in one line. Click properties to pull them out, rename them, give them defaults, then "delete" one from the object and see what happens.</p>
+
+    <div class="seg" role="tablist">
+      <button id="ds-obj" class="on">Object</button>
+      <button id="ds-arr">Array</button>
+    </div>
+
+    <div id="ds-object-mode" class="cols">
+      <div class="box">
+        <h3>The object: <code>action</code></h3>
+        <div id="ds-props"></div>
+        <p class="c" style="font-size:13px;margin:10px 0 0">Click a row to pull it out. ✎ renames it, = adds a default, ✕ removes it from the object.</p>
+      </div>
+      <div>
+        <div class="box"><h3>The code</h3><div id="ds-code" class="code"></div></div>
+        <div class="box" style="margin-top:14px"><h3>The variables you get</h3><table class="vars" id="ds-vars"></table></div>
+      </div>
+    </div>
+
+    <div id="ds-array-mode" class="cols hidden">
+      <div class="box">
+        <h3>The array: <code>seasons</code></h3>
+        <div id="ds-seasons" class="row"></div>
+        <div style="margin-top:16px" class="row">
+          <label for="ds-count" style="font-size:14px">Named variables:</label>
+          <input id="ds-count" type="range" min="0" max="5" value="2">
+          <label class="check"><input id="ds-rest" type="checkbox" checked> use <code>...rest</code></label>
+        </div>
+      </div>
+      <div>
+        <div class="box"><h3>The code</h3><div id="ds-acode" class="code"></div></div>
+        <div class="box" style="margin-top:14px"><h3>The variables you get</h3><table class="vars" id="ds-avars"></table></div>
+      </div>
+    </div>
+
+    <p class="tip"><b>You'll see this in React as</b> <code>function ActionCard({ title, points, done = false })</code>: the component pulls its props out of an object, exactly like this.</p>
+  </section>
+
+  <!-- ================================================================ -->
+  <section id="view-mutation" class="panel hidden">
+    <p class="eyebrow">&gt; section_10 / immutability</p>
+    <h2>Mutation Detective</h2>
+    <p class="lede">Variables don't hold arrays and objects; they <em>point</em> to them. Each box below is one array in memory, with its own color and address. Try each line of code and watch whether it changes the original box or makes a new one.</p>
+
+    <div class="cols">
+      <div class="box">
+        <h3>Run a line of code</h3>
+        <div class="actions" id="mut-actions"></div>
+        <div class="row" style="margin-top:12px"><button id="mut-reset">↺ Reset</button></div>
+      </div>
+      <div class="box">
+        <h3>Memory</h3>
+        <div class="heap" id="mut-heap"></div>
+        <div class="verdict">
+          <div>Original <code>log</code> changed?<b id="mut-changed">—</b></div>
+          <div>React would notice?<br><code style="font-size:12px">oldLog !== newLog</code><b id="mut-react">—</b></div>
+        </div>
+      </div>
+    </div>
+    <p class="tip"><b>Why it matters:</b> React decides whether to re-draw by checking if you handed it a <em>new</em> array or object. Mutate the old one and React thinks nothing changed, so your screen doesn't update.</p>
+  </section>
+
+  <!-- ================================================================ -->
+  <section id="view-pipeline" class="panel hidden">
+    <p class="eyebrow">&gt; section_11 / filter → map → reduce</p>
+    <h2>Pipeline Builder</h2>
+    <p class="lede">Chain array methods to turn the EcoTrack log into an answer. Add steps one at a time and see the data at every stage. Can you build the pipeline that answers: <em>"How many points did I earn on transport?"</em></p>
+
+    <div class="palette" id="pipe-palette"></div>
+    <div class="row" style="margin-bottom:6px"><button id="pipe-undo">⟲ Remove last step</button><button id="pipe-clear">Clear</button></div>
+
+    <div class="box" style="margin-top:12px"><h3>The code</h3><div class="code" id="pipe-code"></div></div>
+    <div class="box" style="margin-top:14px"><h3>The data at each stage</h3><div id="pipe-stages"></div></div>
+
+    <p class="tip"><b>You'll see this in React as</b> <code>{log.filter(a =&gt; a.done).map(a =&gt; &lt;ActionCard {...a} /&gt;)}</code>. Same chain, but the last step turns data into UI.</p>
+  </section>
+
+  <!-- ================================================================ -->
+  <section id="view-promises" class="panel hidden">
+    <p class="eyebrow">&gt; section_11 / async</p>
+    <h2>Promise Race</h2>
+    <p class="lede">EcoTrack needs three pieces of data from three servers. Each takes a random amount of time. Compare waiting for them <em>one at a time</em> with asking for all of them <em>at once</em>.</p>
+
+    <div class="cols">
+      <div class="box">
+        <h3>One at a time</h3>
+        <div class="code"><span class="k">const</span> city = <span class="k">await</span> <span class="v">findCity</span>(<span class="s">"Albany"</span>);
+<span class="k">const</span> air  = <span class="k">await</span> <span class="v">getAirQuality</span>(lat, lon);
+<span class="k">const</span> temp = <span class="k">await</span> <span class="v">getTemperature</span>(lat, lon);</div>
+        <div class="row" style="margin-top:12px"><button class="primary" id="pr-seq">▶ Run one at a time</button></div>
+      </div>
+      <div class="box">
+        <h3>All at once</h3>
+        <div class="code"><span class="k">const</span> [city, air, temp] = <span class="k">await</span> <span class="v">Promise</span>.<span class="v">all</span>([
+  <span class="v">findCity</span>(<span class="s">"Albany"</span>),
+  <span class="v">getAirQuality</span>(lat, lon),
+  <span class="v">getTemperature</span>(lat, lon),
+]);</div>
+        <div class="row" style="margin-top:12px"><button class="primary" id="pr-par">▶ Run all at once</button></div>
+      </div>
+    </div>
+
+    <div class="box" style="margin-top:14px">
+      <div class="row" style="justify-content:space-between">
+        <h3 style="margin:0">Timeline</h3>
+        <label class="check"><input type="checkbox" id="pr-fail"> Make the air quality server fail</label>
+      </div>
+      <div class="lanes" id="pr-lanes"></div>
+      <div class="axis"><span>0s</span><span>1s</span><span>2s</span><span>3s</span><span>4s</span><span>5s</span><span>6s</span></div>
+      <p style="margin:14px 0 0">Total wait: <span class="total" id="pr-total">—</span> <span id="pr-note" style="color:rgba(255,255,255,.7)"></span></p>
+    </div>
+    <p class="tip"><b>Watch out:</b> <code>Promise.all</code> only works when the requests don't depend on each other. Here, the air quality request really needs the city's latitude and longitude first. Which steps could truly run in parallel?</p>
+  </section>
+
+  <footer>WCTD Level III · Advanced JavaScript &amp; React · Session 1</footer>
+</div>
+
+<script>
+/* ---------------- helpers ---------------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = (v) => v === undefined ? '<span class="undef">undefined</span>'
+  : typeof v === "string" ? `<span class="s">"${esc(v)}"</span>`
+  : Array.isArray(v) ? `[${v.map(fmt).join(", ")}]`
+  : `<span class="v">${esc(v)}</span>`;
+
+/* ---------------- routing ---------------- */
+const VIEWS = ["destructuring", "mutation", "pipeline", "promises"];
+function route() {
+  const name = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : VIEWS[0];
+  VIEWS.forEach((v) => $("#view-" + v).classList.toggle("hidden", v !== name));
+  document.querySelectorAll("nav a").forEach((a) => {
+    if (a.getAttribute("href") === "#" + name) a.setAttribute("aria-current", "page");
+    else a.removeAttribute("aria-current");
+  });
+}
+addEventListener("hashchange", route);
+
+/* ================= 1. DESTRUCTURING ================= */
+const ACTION = { title: "Biked to school", category: "transport", points: 20, done: true, date: "2026-11-09" };
+const DEFAULTS = { title: '"Untitled"', category: '"other"', points: "0", done: "false", date: '"today"' };
+const ds = {
+  obj: { ...ACTION },
+  picked: { title: true, points: true },
+  rename: {},
+  def: {},
+};
+const RENAMES = { title: "name", category: "type", points: "score", done: "isDone", date: "when" };
+
+function renderDs() {
+  const props = $("#ds-props");
+  props.innerHTML = Object.keys(ACTION).map((k) => {
+    const has = k in ds.obj;
+    return `<div class="prop ${ds.picked[k] ? "on" : ""} ${has ? "" : "missing"}" data-k="${k}">
+      <span class="key">${k}:</span>
+      <span class="val">${has ? fmt(ds.obj[k]) : "(deleted)"}</span>
+      <span class="ctl">
+        <button data-act="rename" title="Rename" ${ds.picked[k] ? "" : "disabled"}>✎</button>
+        <button data-act="def" title="Default value" ${ds.picked[k] ? "" : "disabled"}>=</button>
+        <button data-act="del" title="${has ? "Delete from object" : "Put back"}">${has ? "✕" : "↺"}</button>
+      </span></div>`;
+  }).join("");
+
+  const keys = Object.keys(ACTION).filter((k) => ds.picked[k]);
+  const parts = keys.map((k) => {
+    let s = `<span class="v">${k}</span>`;
+    if (ds.rename[k]) s += `: <span class="v">${RENAMES[k]}</span>`;
+    if (ds.def[k]) s += ` = <span class="s">${esc(DEFAULTS[k])}</span>`;
+    return s;
+  });
+  const objLines = Object.keys(ACTION).filter((k) => k in ds.obj)
+    .map((k) => `  ${k}: ${fmt(ds.obj[k])},`).join("\n");
+  $("#ds-code").innerHTML =
+    `<span class="k">const</span> action = {\n${objLines}\n};\n\n` +
+    (keys.length
+      ? `<span class="k">const</span> { ${parts.join(", ")} } = action;`
+      : `<span class="c">// click a property to destructure it</span>`);
+
+  $("#ds-vars").innerHTML = keys.length ? keys.map((k) => {
+    const name = ds.rename[k] ? RENAMES[k] : k;
+    let val = ds.obj[k];
+    let note = "";
+    if (val === undefined && ds.def[k]) { val = JSON.parse(DEFAULTS[k]); note = ' <span class="c">← default</span>'; }
+    return `<tr><td>${name}</td><td>${fmt(val)}${note}</td></tr>`;
+  }).join("") : `<tr><td colspan="2" class="c">none yet</td></tr>`;
+}
+$("#ds-props").addEventListener("click", (e) => {
+  const row = e.target.closest(".prop"); if (!row) return;
+  const k = row.dataset.k; const act = e.target.closest("button")?.dataset.act;
+  if (act === "rename") ds.rename[k] = !ds.rename[k];
+  else if (act === "def") ds.def[k] = !ds.def[k];
+  else if (act === "del") { if (k in ds.obj) delete ds.obj[k]; else ds.obj[k] = ACTION[k]; }
+  else { ds.picked[k] = !ds.picked[k]; if (!ds.picked[k]) { ds.rename[k] = false; ds.def[k] = false; } }
+  renderDs();
+});
+
+const SEASONS = ["Spring", "Summer", "Autumn", "Winter"];
+const NAMES = ["first", "second", "third", "fourth", "fifth"];
+function renderDsArray() {
+  const n = +$("#ds-count").value; const rest = $("#ds-rest").checked;
+  $("#ds-seasons").innerHTML = SEASONS.map((s, i) =>
+    `<span class="chip" style="border-color:${i < n ? "var(--cyan)" : rest ? "var(--orange)" : "var(--line)"}">[${i}] ${fmt(s)}</span>`).join("");
+  const names = NAMES.slice(0, n).map((x) => `<span class="v">${x}</span>`);
+  if (rest) names.push(`...<span class="v">rest</span>`);
+  $("#ds-acode").innerHTML = `<span class="k">const</span> seasons = [${SEASONS.map(fmt).join(", ")}];\n\n` +
+    (names.length ? `<span class="k">const</span> [${names.join(", ")}] = seasons;` : `<span class="c">// slide to name some variables</span>`);
+  const rows = NAMES.slice(0, n).map((x, i) => `<tr><td>${x}</td><td>${fmt(SEASONS[i])}</td></tr>`);
+  if (rest) rows.push(`<tr><td>rest</td><td>${fmt(SEASONS.slice(n))}</td></tr>`);
+  $("#ds-avars").innerHTML = rows.join("") || `<tr><td colspan="2" class="c">none yet</td></tr>`;
+}
+$("#ds-count").addEventListener("input", renderDsArray);
+$("#ds-rest").addEventListener("change", renderDsArray);
+$("#ds-obj").onclick = () => { $("#ds-obj").classList.add("on"); $("#ds-arr").classList.remove("on"); $("#ds-object-mode").classList.remove("hidden"); $("#ds-array-mode").classList.add("hidden"); };
+$("#ds-arr").onclick = () => { $("#ds-arr").classList.add("on"); $("#ds-obj").classList.remove("on"); $("#ds-array-mode").classList.remove("hidden"); $("#ds-object-mode").classList.add("hidden"); };
+
+/* ================= 2. MUTATION DETECTIVE ================= */
+const COLORS = ["#00ced1", "#ffa500", "#9d8cff", "#2ecc71", "#ff6b9d", "#7fe9ea"];
+let mut;
+function mutReset() {
+  const items = [{ t: "Bike", done: false }, { t: "Lunch", done: false }];
+  mut = { heap: [{ id: 1, items }], nextId: 2, vars: { log: 1 }, original: JSON.stringify(items), flash: null, lastNew: null };
+  renderMut();
+}
+const box = (id) => mut.heap.find((b) => b.id === id);
+const MUT_ACTIONS = [
+  { code: 'log.push({ t: "Bus" })', kind: "mut", run() { box(mut.vars.log).items.push({ t: "Bus", done: false }); mut.vars.newLog = mut.vars.log; mut.flash = { box: mut.vars.log }; } },
+  { code: 'const newLog = [...log, { t: "Bus" }]', kind: "imm", run() { const id = mut.nextId++; mut.heap.push({ id, items: [...box(mut.vars.log).items, { t: "Bus", done: false }] }); mut.vars.newLog = id; mut.flash = { box: id }; } },
+  { code: "log[0].done = true", kind: "mut", run() { const b = box(mut.vars.log); b.items[0].done = true; mut.vars.newLog = mut.vars.log; mut.flash = { box: mut.vars.log, item: 0 }; } },
+  { code: "const newLog = log.map((a, i) =>\n  i === 0 ? { ...a, done: true } : a)", kind: "imm", run() { const id = mut.nextId++; mut.heap.push({ id, items: box(mut.vars.log).items.map((a, i) => i === 0 ? { ...a, done: true } : a) }); mut.vars.newLog = id; mut.flash = { box: id, item: 0 }; } },
+  { code: "log.pop()", kind: "mut", run() { box(mut.vars.log).items.pop(); mut.vars.newLog = mut.vars.log; mut.flash = { box: mut.vars.log }; } },
+  { code: "const newLog = log.slice(0, -1)", kind: "imm", run() { const id = mut.nextId++; mut.heap.push({ id, items: box(mut.vars.log).items.slice(0, -1) }); mut.vars.newLog = id; mut.flash = { box: id }; } },
+];
+$("#mut-actions").innerHTML = MUT_ACTIONS.map((a, i) =>
+  `<button data-i="${i}"><span style="white-space:pre">${esc(a.code)}</span><small class="${a.kind}">${a.kind === "mut" ? "mutates" : "new copy"}</small></button>`).join("");
+$("#mut-actions").addEventListener("click", (e) => {
+  const b = e.target.closest("button"); if (!b) return;
+  mutReset(); MUT_ACTIONS[+b.dataset.i].run(); renderMut();
+});
+$("#mut-reset").onclick = mutReset;
+function renderMut() {
+  const live = mut.heap.filter((b) => Object.values(mut.vars).includes(b.id));
+  const varsFor = (id) => Object.entries(mut.vars).filter(([, v]) => v === id).map(([k]) => k);
+  $("#mut-heap").innerHTML = live.map((b) => {
+    const color = COLORS[(b.id - 1) % COLORS.length];
+    const items = b.items.map((it, i) => `<span class="item ${it.done ? "done" : ""} ${mut.flash && mut.flash.box === b.id && mut.flash.item === i ? "flash" : ""}">{ t: "${it.t}", done: ${it.done} }</span>`).join("");
+    const flashBox = mut.flash && mut.flash.box === b.id && mut.flash.item === undefined ? "flash" : "";
+    return varsFor(b.id).map((name) => `<div class="ref"><span class="name">${name}</span><span class="arrow">→</span>
+      <div class="arr ${flashBox}" style="border-color:${color}"><span class="addr" style="background:${color}">array @${b.id}</span>${items || '<span class="c">(empty)</span>'}</div></div>`).join("");
+  }).join("");
+  const changed = JSON.stringify(box(1).items) !== mut.original;
+  const touched = mut.vars.newLog !== undefined;
+  $("#mut-changed").innerHTML = !touched ? "—" : changed ? '<span class="bad">Yes 😬</span>' : '<span class="good">No ✓</span>';
+  $("#mut-react").innerHTML = !touched ? "—" : mut.vars.newLog !== 1 ? '<span class="good">Yes, new array</span>' : '<span class="bad">No, same array</span>';
+}
+
+/* ================= 3. PIPELINE BUILDER ================= */
+const LOG = [
+  { id: 1, title: "Biked to school", category: "transport", points: 20, done: true },
+  { id: 2, title: "Meatless lunch", category: "food", points: 10, done: true },
+  { id: 3, title: "Unplugged chargers", category: "energy", points: 5, done: true },
+  { id: 4, title: "Took the bus", category: "transport", points: 15, done: true },
+  { id: 5, title: "Reusable bottle", category: "waste", points: 5, done: false },
+  { id: 6, title: "Walked to a friend's", category: "transport", points: 10, done: false },
+  { id: 7, title: "Shorter shower", category: "energy", points: 10, done: true },
+  { id: 8, title: "Composted scraps", category: "waste", points: 10, done: true },
+];
+let pipe = [];
+const STEPS = {
+  done:    { needs: "objects", label: ".filter(a => a.done)", run: (d) => d.filter((a) => a.done) },
+  cat:     { needs: "objects", label: (s) => `.filter(a => a.category === "${s.cat}")`, run: (d, s) => d.filter((a) => a.category === s.cat), opts: true },
+  sort:    { needs: "objects", label: ".toSorted((a, b) => b.points - a.points)", run: (d) => d.toSorted((a, b) => b.points - a.points) },
+  points:  { needs: "objects", label: ".map(a => a.points)", run: (d) => d.map((a) => a.points) },
+  titles:  { needs: "objects", label: ".map(a => a.title)", run: (d) => d.map((a) => a.title) },
+  sum:     { needs: "numbers", label: ".reduce((sum, n) => sum + n, 0)", run: (d) => d.reduce((s, n) => s + n, 0) },
+  count:   { needs: "any",     label: ".length", run: (d) => d.length },
+};
+const kindOf = (d) => typeof d === "number" ? "number" : d.length === 0 ? "empty" : typeof d[0] === "object" ? "objects" : typeof d[0] === "number" ? "numbers" : "strings";
+function pipeData() {
+  const out = [LOG];
+  for (const s of pipe) out.push(STEPS[s.type].run(out.at(-1), s));
+  return out;
+}
+function renderPipe() {
+  const stages = pipeData();
+  const cur = stages.at(-1);
+  const k = kindOf(cur);
+  const can = (need) => k !== "number" && (need === "any" || need === k || k === "empty");
+  $("#pipe-palette").innerHTML = Object.entries(STEPS).map(([type, s]) => {
+    const label = typeof s.label === "function" ? `.filter(a => a.category === <select id="pipe-cat"><option>transport</option><option>food</option><option>energy</option><option>waste</option></select>)` : esc(s.label);
+    return `<button data-type="${type}" ${can(s.needs) ? "" : "disabled"}>${label}</button>`;
+  }).join("");
+  const select = $("#pipe-cat"); if (select) { select.value = window._cat || "transport"; select.onclick = (e) => e.stopPropagation(); select.onchange = () => (window._cat = select.value); }
+
+  $("#pipe-code").innerHTML = `<span class="v">log</span>` + pipe.map((s) =>
+    `\n  <span class="p">${esc(typeof STEPS[s.type].label === "function" ? STEPS[s.type].label(s) : STEPS[s.type].label)}</span>`).join("") + ";";
+
+  $("#pipe-stages").innerHTML = stages.map((d, i) => {
+    const op = i === 0 ? "log" : (typeof STEPS[pipe[i - 1].type].label === "function" ? STEPS[pipe[i - 1].type].label(pipe[i - 1]) : STEPS[pipe[i - 1].type].label);
+    let body;
+    if (typeof d === "number") body = `<span class="big">${d}</span>`;
+    else if (!d.length) body = `<span class="c">[] (empty array)</span>`;
+    else if (typeof d[0] === "object") body = d.map((a) => `<span class="chip cat-${a.category}" title="${a.category}">${esc(a.title)} · ${a.points}${a.done ? " ✓" : ""}</span>`).join("");
+    else body = d.map((x) => `<span class="chip">${fmt(x)}</span>`).join("");
+    const count = typeof d === "number" ? "" : ` <span class="c">(${d.length} item${d.length === 1 ? "" : "s"})</span>`;
+    return `<div class="stage"><span class="num">${i}</span><div><div class="op">${esc(op)}${count}</div><div class="out">${body}</div></div></div>`;
+  }).join("");
+  $("#pipe-undo").disabled = !pipe.length; $("#pipe-clear").disabled = !pipe.length;
+}
+$("#pipe-palette").addEventListener("click", (e) => {
+  const b = e.target.closest("button"); if (!b || b.disabled || e.target.tagName === "SELECT") return;
+  pipe.push({ type: b.dataset.type, cat: window._cat || "transport" }); renderPipe();
+});
+$("#pipe-undo").onclick = () => { pipe.pop(); renderPipe(); };
+$("#pipe-clear").onclick = () => { pipe = []; renderPipe(); };
+
+/* ================= 4. PROMISE RACE ================= */
+const REQS = ["findCity", "getAirQuality", "getTemperature"];
+const SCALE = 6000; // ms shown on the axis
+let racing = false;
+function lanes(results = []) {
+  $("#pr-lanes").innerHTML = REQS.map((r, i) => `<div class="lane"><span class="label">${r}</span>
+    <div class="track"><div class="bar ${results[i]?.fail ? "fail" : ""}" id="bar-${i}"></div></div><span class="t" id="t-${i}">${results[i] ? (results[i].fail ? "✕ failed" : (results[i].dur / 1000).toFixed(1) + "s") : ""}</span></div>`).join("");
+}
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+function fakeRequest(i, start, delay, fail) {
+  return new Promise((resolve, reject) => {
+    const bar = $("#bar-" + i); const t0 = performance.now();
+    bar.style.left = (start / SCALE * 100) + "%";
+    const tick = () => {
+      const el = performance.now() - t0; bar.style.width = (Math.min(el, delay) / SCALE * 100) + "%";
+      if (el < delay) requestAnimationFrame(tick);
+      else if (fail) { bar.classList.add("fail"); $("#t-" + i).textContent = "✕ failed"; reject(new Error(REQS[i] + " failed")); }
+      else { $("#t-" + i).textContent = (delay / 1000).toFixed(1) + "s"; resolve(delay); }
+    };
+    requestAnimationFrame(tick);
+  });
+}
+async function race(mode) {
+  if (racing) return; racing = true;
+  document.querySelectorAll("#pr-seq,#pr-par").forEach((b) => (b.disabled = true));
+  lanes(); $("#pr-total").textContent = "…"; $("#pr-note").textContent = "";
+  const delays = REQS.map(() => 600 + Math.random() * 1300);
+  const failIdx = $("#pr-fail").checked ? 1 : -1;
+  const t0 = performance.now();
+  try {
+    if (mode === "seq") {
+      let start = 0;
+      for (let i = 0; i < REQS.length; i++) { await fakeRequest(i, start, delays[i], i === failIdx); start += delays[i]; }
+    } else {
+      await Promise.all(REQS.map((_, i) => fakeRequest(i, 0, delays[i], i === failIdx)));
+    }
+    const total = performance.now() - t0;
+    $("#pr-total").textContent = (total / 1000).toFixed(1) + "s";
+    $("#pr-note").textContent = mode === "seq" ? "(each request waited for the one before it)" : "(only as long as the slowest request)";
+  } catch (err) {
+    $("#pr-total").innerHTML = '<span class="bad">Error!</span>';
+    $("#pr-note").textContent = mode === "seq"
+      ? `"${err.message}": the requests after it never started. Wrap it in try/catch to show a friendly message.`
+      : `"${err.message}": Promise.all rejects as soon as ANY request fails, even if the others succeed.`;
+  }
+  await sleep(200);
+  racing = false; document.querySelectorAll("#pr-seq,#pr-par").forEach((b) => (b.disabled = false));
+}
+$("#pr-seq").onclick = () => race("seq");
+$("#pr-par").onclick = () => race("par");
+
+/* ---------------- boot ---------------- */
+renderDs(); renderDsArray(); mutReset(); renderPipe(); lanes(); route();
+</script>
+</body>
+</html>

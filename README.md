@@ -30,6 +30,8 @@ Then open the link Vite prints (usually http://localhost:5173).
 | `npm run build` | Build the production version into `dist/` |
 | `node exercises/session-1.js` | Run the Session 1 exercises |
 
+The Session 1 interactive demos are in `demos/session-1-demos.html`. Open the file in any browser; no server needed.
+
 ## What's where
 
 ```
@@ -42,6 +44,7 @@ src/
   main.js                connects everything to the page
 labs/lab-1.md            Lab 1 instructions
 exercises/session-1.js   Session 1 exercises
+demos/                   interactive concept demos (open in a browser)
 AI-LOG.md                your team's AI Log (judges read this!)
 ```
 
