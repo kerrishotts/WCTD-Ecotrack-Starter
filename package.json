@@ -1,0 +1,16 @@
+{
+  "name": "ecotrack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WCTD Level III starter project: log sustainable actions and check live air quality.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "node scripts/run-checks.js"
+  },
+  "devDependencies": {
+    "vite": "^8.3.8"
+  }
+}

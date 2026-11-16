@@ -1,0 +1,111 @@
+/* EcoTrack: styled after the WCTD Hack-A-Thon site */
+:root {
+  --navy: #12141f;
+  --navy-2: #1a1d2e;
+  --slate: #4a5066;
+  --cyan: #00ced1;
+  --cyan-soft: #7fe9ea;
+  --orange: #ffa500;
+  --orange-soft: #ffce7a;
+  --purple: #483d8b;
+  --paper: #f7f8fc;
+  --ink: #1a1d2e;
+  --pass: #2ecc71;
+  --fail: #e74c3c;
+  --todo: #ffa500;
+  --heading: "Acumin Pro", "Inter", "Segoe UI", system-ui, sans-serif;
+  --body: "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--body);
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.5;
+}
+
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* ---- Hero ------------------------------------------------------------- */
+.hero {
+  color: #fff;
+  padding: 56px 0 72px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 40px 40px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 40px 40px,
+    radial-gradient(ellipse at 70% 0%, #2a2350 0%, var(--navy) 65%);
+}
+.pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 999px;
+  background: rgba(0, 206, 209, 0.15); color: var(--cyan-soft);
+  font: 600 13px/1 var(--body); letter-spacing: 0.08em; text-transform: uppercase;
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+h1, h2, h3 { font-family: var(--heading); font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+h1 { font-size: clamp(2.4rem, 6vw, 3.8rem); margin-top: 18px; }
+.accent { color: var(--cyan); }
+.lead { max-width: 620px; font-size: 1.1rem; color: rgba(255, 255, 255, 0.85); }
+
+/* ---- Cards ------------------------------------------------------------ */
+.grid {
+  display: grid; gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  margin-top: -40px; padding-bottom: 32px;
+}
+.card {
+  background: #fff; border-radius: 14px; padding: 24px;
+  border-left: 4px solid var(--cyan);
+  box-shadow: 0 8px 24px rgba(18, 20, 31, 0.08);
+}
+.card:nth-child(2) { border-left-color: var(--orange); }
+.card:nth-child(3) { border-left-color: var(--purple); }
+.card--wide { grid-column: 1 / -1; }
+.eyebrow { font: 600 13px var(--mono); color: #0a9a9c; margin: 0 0 6px; }
+h2 { font-size: 1.5rem; margin-bottom: 12px; }
+
+/* ---- Checks ----------------------------------------------------------- */
+.summary { font-weight: 600; color: var(--slate); }
+.summary--done { color: #1e9e57; }
+.check-group { margin-top: 16px; }
+.check-group h3 { font-size: 1rem; display: flex; gap: 8px; align-items: center; }
+.tag { font: 600 11px var(--body); text-transform: uppercase; background: var(--orange-soft); padding: 2px 8px; border-radius: 999px; }
+.check-list { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; }
+.check { display: grid; grid-template-columns: 64px 1fr; gap: 4px 10px; align-items: center; }
+.badge { font: 700 12px var(--mono); text-align: center; padding: 3px 0; border-radius: 6px; color: #fff; }
+.check--pass .badge { background: var(--pass); }
+.check--fail .badge, .check--error .badge { background: var(--fail); }
+.check--todo .badge { background: var(--todo); color: var(--navy); }
+.check--todo > span:nth-child(2) { color: var(--slate); }
+.detail { grid-column: 2; font-size: 0.85rem; background: #fdf0ef; border-radius: 6px; padding: 6px 10px; white-space: pre; overflow-x: auto; }
+code { font-family: var(--mono); }
+
+/* ---- Stats ------------------------------------------------------------ */
+.big-number { font: 800 3rem/1 var(--heading); margin: 4px 0 16px; }
+.big-number span { font: 400 1rem var(--body); color: var(--slate); }
+.stats { width: 100%; border-collapse: collapse; }
+.stats th, .stats td { text-align: left; padding: 6px 4px; border-bottom: 1px solid #e7e7e7; }
+.stats th { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate); }
+.hint { color: var(--slate); font-size: 0.9rem; }
+
+/* ---- Air quality ------------------------------------------------------ */
+.air-form label { font-weight: 600; display: block; margin-bottom: 6px; }
+.row { display: flex; gap: 8px; }
+input { flex: 1; font: inherit; padding: 10px 12px; border: 2px solid #d9dbe6; border-radius: 8px; }
+input:focus { outline: none; border-color: var(--cyan); }
+button {
+  font: 700 1rem var(--body); padding: 10px 18px; border: 0; border-radius: 8px;
+  background: var(--orange); color: var(--navy); cursor: pointer;
+}
+button:hover { filter: brightness(1.08); }
+.aqi { font: 800 3rem/1 var(--heading); color: var(--aqi-color); margin: 6px 0; }
+.aqi span { font: 600 1rem var(--body); color: var(--ink); }
+.muted { color: var(--slate); margin: 4px 0; }
+.error { color: var(--fail); font-weight: 600; }
+
+.footer { color: var(--slate); font-size: 0.9rem; padding-bottom: 40px; }
+.footer a { color: #0a9a9c; }
