@@ -16,19 +16,22 @@ const show = (label, actual, expected) => {
 //   function describeCar(car) {
 //     return `${car.year} ${car.make} ${car.model}`;
 //   }
-const describeCar = () => "TODO"; // your arrow function here
+const describeCar = ({ year, make, model }) => `${year} ${make} ${model}`;
 
 // Level II version:
 //   function characterLine(character) {
 //     return character.name + " (played by " + character.actor + ")";
 //   }
-const characterLine = () => "TODO"; // your arrow function here
+const characterLine = ({ name, actor }) => `${name} (played by ${actor})`;
 
 // Level II version:
 //   function firstAndLast(list) {
 //     return [list[0], list[list.length - 1]];
 //   }
-const firstAndLast = () => "TODO"; // hint: const [first] = list;
+const firstAndLast = (list) => {
+  const [first] = list;
+  return [first, list.at(-1)];
+};
 
 show("describeCar", describeCar({ year: "2001", make: "Toyota", model: "Corolla" }), "2001 Toyota Corolla");
 show("characterLine", characterLine({ name: "Leia Organa", actor: "Carrie Fisher" }), "Leia Organa (played by Carrie Fisher)");
@@ -39,10 +42,7 @@ show("firstAndLast", firstAndLast(["spring", "summer", "autumn", "winter"]), ["s
 // Return a NEW array where the action with `id` has done: true.
 // The original array and its objects must not change.
 // ---------------------------------------------------------------------------
-const markDone = (log, id) => {
-  // TODO: map + spread. Don't touch the original objects!
-  return log;
-};
+const markDone = (log, id) => log.map((a) => (a.id === id ? { ...a, done: true } : a));
 
 const log = [
   { id: 1, title: "Bike to school", done: false },
@@ -57,10 +57,11 @@ show("markDone leaves original alone", log[1].done, false);
 // Return an object like { transport: 2, food: 1 }: how many ACTIONS
 // (not points) are in each category.
 // ---------------------------------------------------------------------------
-const countByCategory = (actions) => {
-  // TODO: reduce, starting from {}
-  return {};
-};
+const countByCategory = (actions) =>
+  actions.reduce((counts, { category }) => {
+    counts[category] = (counts[category] ?? 0) + 1;
+    return counts;
+  }, {});
 
 show(
   "countByCategory",
@@ -83,14 +84,12 @@ const getTemperature = async ({ latitude, longitude }) => {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  // TODO: get current.temperature_2m out of the JSON
-  return NaN;
+  const { current } = await res.json();
+  return current.temperature_2m;
 };
 
 const warmerPlace = async (placeA, placeB) => {
-  // TODO: replace these two lines with ONE Promise.all so both requests run at the same time
-  const tempA = await getTemperature(placeA);
-  const tempB = await getTemperature(placeB);
+  const [tempA, tempB] = await Promise.all([getTemperature(placeA), getTemperature(placeB)]);
   console.log(`      ${placeA.name}: ${tempA}°C, ${placeB.name}: ${tempB}°C`);
   return tempA >= tempB ? placeA.name : placeB.name;
 };

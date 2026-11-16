@@ -15,8 +15,7 @@
  * @returns {object[]} a NEW array with the action at the end
  */
 export function addAction(log, action) {
-  // Return a NEW array. Hint: spread syntax [...]
-  throw new Error("TODO: write addAction");
+  return [...log, action];
 }
 
 /**
@@ -26,8 +25,9 @@ export function addAction(log, action) {
  * @returns {object[]} a NEW array; the matching action is a NEW object
  */
 export function toggleDone(log, id) {
-  // Use map. Copy the matching action: { ...action, done: ??? }
-  throw new Error("TODO: write toggleDone");
+  return log.map((action) =>
+    action.id === id ? { ...action, done: !action.done } : action
+  );
 }
 
 /**
@@ -37,8 +37,9 @@ export function toggleDone(log, id) {
  * @returns {number}
  */
 export function totalPoints(log) {
-  // filter the done actions, then reduce to a sum
-  throw new Error("TODO: write totalPoints");
+  return log
+    .filter((action) => action.done)
+    .reduce((total, action) => total + action.points, 0);
 }
 
 /**
@@ -49,8 +50,12 @@ export function totalPoints(log) {
  * @returns {Record<string, number>}
  */
 export function pointsByCategory(log) {
-  // Lab step 3: AI checkpoint! Predict before you run.
-  throw new Error("TODO: write pointsByCategory");
+  return log
+    .filter(({ done }) => done)
+    .reduce((totals, { category, points }) => {
+      totals[category] = (totals[category] ?? 0) + points;
+      return totals;
+    }, {});
 }
 
 /**
@@ -60,8 +65,8 @@ export function pointsByCategory(log) {
  * @returns {object[]}
  */
 export function filterByCategory(log, category) {
-  // Remember the special "all" category
-  throw new Error("TODO: write filterByCategory");
+  if (category === "all") return log;
+  return log.filter((action) => action.category === category);
 }
 
 // ---------------------------------------------------------------------------
@@ -75,6 +80,12 @@ export function filterByCategory(log, category) {
  * @returns {number}
  */
 export function streak(log, today) {
-  // Stretch goal: see the hint in labs/lab-1.md
-  throw new Error("TODO: write streak");
+  const doneDays = new Set(log.filter((a) => a.done).map((a) => a.date));
+  let count = 0;
+  const day = new Date(`${today}T00:00:00Z`);
+  while (doneDays.has(day.toISOString().slice(0, 10))) {
+    count++;
+    day.setUTCDate(day.getUTCDate() - 1);
+  }
+  return count;
 }

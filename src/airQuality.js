@@ -42,14 +42,15 @@ export async function findCity(name) {
  *   time  - when the reading was taken
  */
 export async function getAirQuality(lat, lon) {
-  // Lab step 4. Follow the same pattern as findCity above:
-  //   1. build the URL:
-  //      `${AIR_QUALITY_URL}?latitude=${lat}&longitude=${lon}&current=us_aqi,pm2_5`
-  //   2. await fetch(url)
-  //   3. if (!res.ok) throw a helpful Error
-  //   4. await res.json(): the values are inside `current`
-  //   5. return { aqi, pm2_5, time }
-  throw new Error("TODO: write getAirQuality");
+  const url = `${AIR_QUALITY_URL}?latitude=${lat}&longitude=${lon}&current=us_aqi,pm2_5`;
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error(`Air quality request failed (HTTP ${res.status})`);
+  }
+
+  const { current } = await res.json();
+  return { aqi: current.us_aqi, pm2_5: current.pm2_5, time: current.time };
 }
 
 /**
