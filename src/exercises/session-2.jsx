@@ -4,8 +4,6 @@ import { useState } from "react";
 // ---------------------------------------------------------------------------
 // Exercise 1: Badge
 // Show `category` in a pill whose background color depends on the category.
-// Hint: look up the color in BADGE_COLORS and use a style object:
-//   style={{ background: ..., padding: "4px 12px", borderRadius: 999 }}
 // ---------------------------------------------------------------------------
 const BADGE_COLORS = {
   transport: "#00ced1",
@@ -15,7 +13,19 @@ const BADGE_COLORS = {
 };
 
 export function Badge({ category }) {
-  return <span>{category}</span>; // TODO: make it a colored pill
+  return (
+    <span
+      style={{
+        background: BADGE_COLORS[category] ?? "#e6e8f0",
+        color: "#12141f",
+        padding: "4px 12px",
+        borderRadius: 999,
+        fontWeight: 700,
+      }}
+    >
+      {category}
+    </span>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -25,14 +35,11 @@ export function Badge({ category }) {
 const fruits = ["Apple", "Banana", "Mango", "Kiwi", "Guava"];
 
 export function FruitList() {
-  // TODO: replace these five lines with fruits.map(...)
   return (
     <ul>
-      <li>Apple</li>
-      <li>Banana</li>
-      <li>Mango</li>
-      <li>Kiwi</li>
-      <li>Guava</li>
+      {fruits.map((fruit) => (
+        <li key={fruit}>{fruit}</li>
+      ))}
     </ul>
   );
 }
@@ -42,13 +49,17 @@ export function FruitList() {
 // Keep the count in state. "−" must never take it below zero.
 // ---------------------------------------------------------------------------
 export function LikeButton() {
-  const count = 0; // TODO: useState
+  const [count, setCount] = useState(0);
 
   return (
     <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-      <button type="button" className="toggle">−</button>
+      <button type="button" className="toggle" onClick={() => setCount((c) => Math.max(0, c - 1))}>
+        −
+      </button>
       <strong style={{ fontSize: "1.5rem", minWidth: 40, textAlign: "center" }}>{count}</strong>
-      <button type="button" className="toggle">+</button>
+      <button type="button" className="toggle" onClick={() => setCount((c) => c + 1)}>
+        +
+      </button>
       <span>👍 likes</span>
     </div>
   );
@@ -57,21 +68,23 @@ export function LikeButton() {
 // ---------------------------------------------------------------------------
 // Exercise 4: SearchList
 // A controlled input; show only the items that include what's typed.
-// Hint: idea.toLowerCase().includes(query.toLowerCase())
 // ---------------------------------------------------------------------------
 const ideas = ["Bike to school", "Meatless Monday", "Unplug chargers", "Compost scraps", "Reusable bottle", "Shorter showers"];
 
 export function SearchList() {
-  // TODO: keep the query in state and filter `ideas` with it
+  const [query, setQuery] = useState("");
+  const matches = ideas.filter((idea) => idea.toLowerCase().includes(query.trim().toLowerCase()));
+
   return (
     <div>
       <label htmlFor="search">Search ideas</label>
-      <input id="search" placeholder="Try “bike”" />
+      <input id="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try “bike”" />
       <ul>
-        {ideas.map((idea) => (
+        {matches.map((idea) => (
           <li key={idea}>{idea}</li>
         ))}
       </ul>
+      {matches.length === 0 && <p className="muted">No matches.</p>}
     </div>
   );
 }

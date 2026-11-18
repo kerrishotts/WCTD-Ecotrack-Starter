@@ -1,36 +1,47 @@
 // App owns the data. Every other component gets what it needs as props.
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header.jsx";
 import ActionForm from "./components/ActionForm.jsx";
 import ScoreBoard from "./components/ScoreBoard.jsx";
 import CategoryFilter from "./components/CategoryFilter.jsx";
 import ActionList from "./components/ActionList.jsx";
-import ActionCard from "./components/ActionCard.jsx";
 import { sampleLog } from "./data/sampleLog.js";
 import { addAction, toggleDone, filterByCategory, newAction } from "./ecotrack.js";
 
+const STORAGE_KEY = "ecotrack-log";
 const today = () => new Date().toISOString().slice(0, 10);
 
-export default function App() {
-  // TODO (Lab step 4): the log never changes yet. Store it in state instead:
-  // useState gives you the current value and a function to replace it.
-  const log = sampleLog;
+// STRETCH: start from the saved log if there is one.
+function loadLog() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : sampleLog;
+  } catch {
+    return sampleLog;
+  }
+}
 
-  // TODO (Lab step 4): the filter is stuck on "all". Store it in state too.
-  const category = "all";
+export default function App() {
+  const [log, setLog] = useState(loadLog);
+  const [category, setCategory] = useState("all");
+
+  // STRETCH: save the log whenever it changes (more on useEffect in Session 3).
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
+    } catch {
+      // storage can be unavailable (private browsing); the app still works
+    }
+  }, [log]);
 
   function handleToggle(id) {
-    // TODO (Lab step 4): replace the log with a NEW log where this action
-    // is toggled. Your Session 1 toggleDone function does the hard part.
-    console.log("TODO: toggle action", id);
+    setLog((current) => toggleDone(current, id));
   }
 
   function handleAdd(fields) {
-    // TODO (Lab step 5): build a full action with newAction(fields, { id, date })
-    // and add it to the log with addAction. Use Date.now() for the id and
-    // today() for the date.
-    console.log("TODO: add action", fields);
+    const action = newAction(fields, { id: Date.now(), date: today() });
+    setLog((current) => addAction(current, action));
   }
 
   const visible = filterByCategory(log, category);
@@ -46,14 +57,8 @@ export default function App() {
         <section className="card" aria-labelledby="actions-title">
           <div className="list-head">
             <h2 id="actions-title">Your actions</h2>
-            <CategoryFilter value={category} onChange={(c) => console.log("TODO: filter by", c)} />
+            <CategoryFilter value={category} onChange={setCategory} />
           </div>
-
-          {/* Step 2 preview: one card on its own. Delete this in step 3. */}
-          <ul className="action-list" style={{ marginBottom: 12 }}>
-            <ActionCard {...sampleLog[0]} onToggle={handleToggle} />
-          </ul>
-
           <ActionList actions={visible} onToggle={handleToggle} />
         </section>
       </main>

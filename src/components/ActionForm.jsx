@@ -1,29 +1,53 @@
 // Lab 2, step 5: a form for logging a new action.
 //
 // Props: onAdd, a function to call with { title, category }.
-//
-// The inputs must be "controlled": keep their values in state with
-// useState, set `value`, and update the state in `onChange`.
-//
-// The tests look for:
-//   - an input labeled "What did you do?"
-//   - a select labeled "Category" (one <option> per category)
-//   - a button "Add action" that is disabled while the title is empty
-// When the form is submitted:
-//   1. call event.preventDefault()  (remember Level II?)
-//   2. call onAdd({ title, category }) with the title trimmed
-//   3. clear the title box
+// The inputs are "controlled": their values live in state.
 
 import { useState } from "react";
 import { CATEGORIES } from "../data/sampleLog.js";
 
 export default function ActionForm({ onAdd }) {
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("transport");
+
+  const trimmed = title.trim();
+
+  function handleSubmit(event) {
+    event.preventDefault(); // stop the browser from reloading the page
+    if (!trimmed) return;
+    onAdd({ title: trimmed, category });
+    setTitle(""); // clear the box for the next one
+  }
+
   return (
-    <form className="card action-form">
+    <form className="card action-form" onSubmit={handleSubmit}>
       <h2>Log an action</h2>
-      <p className="todo">
-        TODO: build <code>ActionForm</code> (Lab 2, step 5)
-      </p>
+
+      <label htmlFor="action-title">What did you do?</label>
+      <input
+        id="action-title"
+        value={title}
+        onChange={(event) => setTitle(event.target.value)}
+        placeholder="e.g. Biked to school"
+        autoComplete="off"
+      />
+
+      <label htmlFor="action-category">Category</label>
+      <select
+        id="action-category"
+        value={category}
+        onChange={(event) => setCategory(event.target.value)}
+      >
+        {CATEGORIES.map((c) => (
+          <option key={c} value={c}>
+            {c}
+          </option>
+        ))}
+      </select>
+
+      <button type="submit" disabled={!trimmed}>
+        Add action
+      </button>
     </form>
   );
 }
