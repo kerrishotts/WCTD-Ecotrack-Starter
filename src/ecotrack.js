@@ -89,3 +89,30 @@ export function streak(log, today) {
   }
   return count;
 }
+
+// ---------------------------------------------------------------------------
+// Added in Session 2: build a complete action from what the user typed.
+// ---------------------------------------------------------------------------
+
+/** Default points and CO2 savings for a new action, by category. */
+export const POINTS = { transport: 15, food: 10, energy: 5, waste: 5 };
+export const CO2_KG = { transport: 1.8, food: 1.5, energy: 0.3, waste: 0.2 };
+
+/**
+ * Turn form fields into a full action object.
+ * The id and date are passed in (not created here) so this stays pure.
+ * @param {{ title: string, category: string }} fields
+ * @param {{ id: number, date: string }} meta
+ * @returns {object}
+ */
+export function newAction({ title, category }, { id, date }) {
+  return {
+    id,
+    title: title.trim(),
+    category,
+    points: POINTS[category] ?? 5,
+    co2Kg: CO2_KG[category] ?? 0,
+    date,
+    done: false,
+  };
+}

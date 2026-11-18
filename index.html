@@ -3,55 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EcoTrack · Engine Room</title>
     <link rel="icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/src/style.css" />
+    <title>EcoTrack</title>
   </head>
   <body>
-    <header class="hero">
-      <div class="wrap">
-        <span class="pill"><span class="dot"></span>WCTD Level III · Session 1</span>
-        <h1>EcoTrack <span class="accent">engine room.</span></h1>
-        <p class="lead">
-          This page runs the checks for Lab 1 every time you save a file.
-          Make them all pass, then try the live air quality panel.
-        </p>
-      </div>
-    </header>
-
-    <main class="wrap grid">
-      <section class="card card--wide" aria-labelledby="checks-title">
-        <p class="eyebrow">&gt; lab_1_checks</p>
-        <h2 id="checks-title">Lab 1 checks</h2>
-        <p id="summary" class="summary">Running…</p>
-        <div id="checks"></div>
-      </section>
-
-      <section class="card" aria-labelledby="stats-title">
-        <p class="eyebrow">&gt; sample_data</p>
-        <h2 id="stats-title">The sample log, by the numbers</h2>
-        <div id="stats"></div>
-      </section>
-
-      <section class="card" aria-labelledby="air-title">
-        <p class="eyebrow">&gt; live_air_quality</p>
-        <h2 id="air-title">Air quality right now</h2>
-        <form id="air-form" class="air-form">
-          <label for="city">City</label>
-          <div class="row">
-            <input id="city" name="city" value="Albany" autocomplete="off" />
-            <button type="submit">Check</button>
-          </div>
-        </form>
-        <div id="air-result" class="air-result" aria-live="polite"></div>
-      </section>
-    </main>
-
-    <footer class="wrap footer">
-      Data: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> ·
-      Lab instructions: <code>labs/lab-1.md</code>
-    </footer>
-
-    <script type="module" src="/src/main.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
