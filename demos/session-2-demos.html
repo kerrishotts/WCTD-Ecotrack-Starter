@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WCTD Level III · Session 2 Interactive Demos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<style>
+  :root {
+    --navy:#12141f; --navy-2:#1a1d2e; --navy-3:#252a40; --slate:#4a5066; --line:#2f3550;
+    --cyan:#00ced1; --cyan-soft:#7fe9ea; --orange:#ffa500; --orange-soft:#ffce7a;
+    --purple:#483d8b; --purple-soft:#a99bff; --paper:#f7f8fc; --red:#ff6b6b; --green:#2ecc71;
+    --heading:"Inter",system-ui,sans-serif; --mono:"JetBrains Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:var(--heading);color:#fff;min-height:100vh;line-height:1.5;
+    background:
+      linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/40px 40px,
+      linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/40px 40px,
+      radial-gradient(ellipse at 75% -10%,#2a2350 0%,var(--navy) 60%) fixed;
+    background-color:var(--navy);}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 24px 48px}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(0,206,209,.15);color:var(--cyan-soft);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+  .pill i{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+  h1{font-weight:800;letter-spacing:-.02em;font-size:clamp(2rem,5vw,3rem);margin:14px 0 4px}
+  h1 span{color:var(--cyan)}
+  .sub{color:rgba(255,255,255,.75);margin:0 0 22px;max-width:720px}
+  nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+  nav a{color:rgba(255,255,255,.8);text-decoration:none;font-weight:600;font-size:14px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+  nav a .n{font-family:var(--mono);color:var(--cyan);margin-right:6px}
+  nav a[aria-current="page"]{background:var(--cyan);color:var(--navy);border-color:var(--cyan)}
+  nav a[aria-current="page"] .n{color:var(--navy)}
+  .panel{background:var(--navy-2);border:1px solid var(--line);border-radius:16px;padding:24px}
+  .eyebrow{font-family:var(--mono);font-size:13px;color:var(--cyan);margin:0}
+  h2{font-weight:800;letter-spacing:-.02em;margin:4px 0 6px;font-size:1.7rem}
+  h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6)}
+  .lede{color:rgba(255,255,255,.75);margin:0 0 18px;max-width:800px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:820px){.cols{grid-template-columns:1fr}}
+  .box{background:var(--navy-3);border-radius:12px;padding:16px;border:1px solid var(--line)}
+  code,.code{font-family:var(--mono)}
+  .code{background:#0d0f18;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;white-space:pre-wrap;color:#e9ecf5;margin:0}
+  .k{color:var(--purple-soft)} .v{color:var(--cyan-soft)} .s{color:var(--orange-soft)} .c{color:#7a819c} .tag{color:#ff9db5}
+  .line{display:block;border-radius:4px;padding:0 4px;margin:0 -4px}
+  .line.hot{background:rgba(255,165,0,.25)}
+  button{font:600 14px var(--heading);border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;padding:8px 14px;cursor:pointer}
+  button:hover{background:rgba(255,255,255,.12)}
+  button.primary{background:var(--orange);color:var(--navy);border-color:var(--orange)}
+  button.on{background:var(--cyan);color:var(--navy);border-color:var(--cyan)}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .tip{margin-top:16px;padding:12px 16px;border-left:3px solid var(--orange);background:rgba(255,165,0,.08);border-radius:0 10px 10px 0;color:rgba(255,255,255,.88)}
+  .tip b{color:var(--orange-soft)}
+  .hidden{display:none}
+  .muted{color:rgba(255,255,255,.6);font-size:14px}
+  .good{color:var(--green)} .bad{color:var(--red)}
+  label.check{display:flex;gap:8px;align-items:center;font-size:14px;color:rgba(255,255,255,.85)}
+  input[type=text],input[type=search]{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#0d0f18;color:#fff;width:100%}
+  input[type=range]{accent-color:var(--cyan);width:100%}
+  /* mini app inside demos */
+  .mini{background:#fbfbfe;color:#1a1d2e;border-radius:10px;padding:12px 14px;min-height:150px}
+  .mini ul{margin:6px 0 0;padding-left:20px}
+  .mini .count{font-weight:800}
+  .mismatch{outline:3px solid var(--red);outline-offset:2px}
+  .stat{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font-size:14px}
+  .stat b{font-size:22px}
+  /* component boxes (props flow, re-render) */
+  .comp{position:relative;border:2px solid var(--line);border-radius:12px;padding:10px 12px 12px;background:rgba(255,255,255,.03);transition:border-color .2s}
+  .comp>.name{font-family:var(--mono);font-weight:600;font-size:14px;color:var(--cyan-soft);display:flex;justify-content:space-between;gap:10px}
+  .comp>.name .renders{color:rgba(255,255,255,.5);font-weight:400;font-size:12px}
+  .comp .props{font-family:var(--mono);font-size:12.5px;color:var(--orange-soft);margin:4px 0 6px;word-break:break-word}
+  .comp .state{font-family:var(--mono);font-size:12.5px;color:#9ff0b8;margin:2px 0 6px}
+  .comp .kids{display:grid;gap:10px;margin-top:6px}
+  .comp .kids.row2{grid-template-columns:1fr 1fr}
+  .comp .kids.row3{grid-template-columns:1fr 1fr 1fr}
+  .flash{animation:flash 900ms ease-out}
+  @keyframes flash{0%{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,165,0,.45);background:rgba(255,165,0,.18)}100%{}}
+  .owner{border-color:#2ecc71}
+  .owner>.name::after{content:"owns state";font-family:var(--heading);font-size:11px;font-weight:700;color:var(--navy);background:var(--green);padding:1px 8px;border-radius:999px;margin-left:auto}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:rgba(255,255,255,.7);margin-top:10px}
+  .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .chg{background:var(--orange);color:var(--navy);border-radius:4px;padding:0 4px}
+  .legend .lc::before{background:var(--orange);outline:2px solid var(--orange-soft)}
+  .legend .lp::before{background:var(--orange-soft)} .legend .ls::before{background:#9ff0b8} .legend .lf::before{background:var(--orange)}
+  .arrow-down{text-align:center;color:rgba(255,255,255,.35);font-size:18px;line-height:1;margin:2px 0}
+  .result-ok{color:var(--green);font-weight:700} .result-bad{color:var(--red);font-weight:700}
+  footer{margin-top:22px;color:rgba(255,255,255,.5);font-size:13px}
+  .err{background:#3a1e24;border:1px solid var(--red);padding:16px;border-radius:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="pill"><i></i>WCTD Level III · Session 2</span>
+  <h1>Thinking in <span>React.</span></h1>
+  <p class="sub">These demos run real React. Click things, watch what re-draws, and try to predict each result before you click.</p>
+
+  <nav aria-label="Demos">
+    <a href="#dom-vs-react"><span class="n">12</span>DOM vs React</a>
+    <a href="#props-flow"><span class="n">13</span>Props Flow</a>
+    <a href="#rerender"><span class="n">14a</span>Re-render Visualizer</a>
+    <a href="#lift-state"><span class="n">14b</span>Lift the State</a>
+  </nav>
+
+  <div id="root"></div>
+  <footer>WCTD Level III · Advanced JavaScript &amp; React · Session 2</footer>
+</div>
+
+<script>
+(function () {
+  if (!window.React || !window.ReactDOM) {
+    document.getElementById("root").innerHTML = '<div class="err">React couldn’t load. These demos need an internet connection to download React from cdnjs.</div>';
+    return;
+  }
+  const { useState, useRef, useEffect, memo, Fragment } = React;
+  const h = React.createElement;
+
+  /* ---------- helpers ---------- */
+  // Flash a component's box every time it renders, and count renders.
+  function useRenderFlash() {
+    const ref = useRef(null);
+    const renders = useRef(0);
+    renders.current += 1;
+    useEffect(() => {
+      const el = ref.current;
+      if (!el) return;
+      el.classList.remove("flash");
+      void el.offsetWidth; // restart the animation
+      el.classList.add("flash");
+    });
+    return [ref, renders.current];
+  }
+  // Which props changed since the last render?
+  function useChanged(obj) {
+    const prev = useRef(null);
+    const changed = prev.current ? Object.keys(obj).filter((k) => prev.current[k] !== obj[k]) : [];
+    useEffect(() => { prev.current = obj; });
+    return changed;
+  }
+  function PropsLine({ obj, changed }) {
+    const keys = Object.keys(obj);
+    return h("div", { className: "props" }, "props { ",
+      keys.map((k, i) => h(Fragment, { key: k },
+        h("span", { className: changed.includes(k) ? "chg" : "" }, `${k}: ${fmt(obj[k])}`),
+        i < keys.length - 1 ? ", " : "")),
+      " }");
+  }
+  const fmt = (v) => typeof v === "string" ? `"${v}"` : typeof v === "function" ? "ƒ" : Array.isArray(v) ? `[${v.length} items]` : String(v);
+  const propsText = (obj) => "{ " + Object.entries(obj).map(([k, v]) => `${k}: ${fmt(v)}`).join(", ") + " }";
+
+  function Code({ lines, hot = [] }) {
+    return h("pre", { className: "code" }, lines.map((html, i) =>
+      h("span", { key: i, className: hot.includes(i) ? "line hot" : "line", dangerouslySetInnerHTML: { __html: html || " " } })));
+  }
+
+  /* ================= 12. DOM vs React ================= */
+  const START = ["Biked to school", "Meatless lunch"];
+  const IDEAS = ["Took the bus", "Composted scraps", "Shorter shower", "Unplugged chargers", "Reusable bottle", "Walked to practice"];
+
+  function DomSide({ forget }) {
+    const listRef = useRef(null), countRef = useRef(null);
+    const [ops, setOps] = useState(0);
+    const [hot, setHot] = useState([]);
+    const [mismatch, setMismatch] = useState(false);
+    const added = useRef(0);
+    // Build the initial list the Level II way, once.
+    useEffect(() => {
+      const ul = listRef.current; ul.textContent = "";
+      START.forEach((t) => { const li = document.createElement("li"); li.textContent = t; ul.appendChild(li); });
+      countRef.current.textContent = START.length;
+      added.current = 0; setOps(0); setMismatch(false);
+    }, []);
+    function add() {
+      const title = IDEAS[added.current % IDEAS.length]; added.current += 1;
+      const li = document.createElement("li");
+      li.textContent = title;
+      listRef.current.appendChild(li);
+      let n = 3;
+      if (!forget) { countRef.current.textContent = listRef.current.children.length; n += 1; }
+      setOps((o) => o + n);
+      setHot(forget ? [1, 2, 3] : [1, 2, 3, 4]);
+      setMismatch(Number(countRef.current.textContent) !== listRef.current.children.length);
+    }
+    return h("div", { className: "box" },
+      h("h3", null, "Level II: tell the DOM every step"),
+      h(Code, { hot, lines: [
+        `<span class="k">function</span> <span class="v">addItem</span>(title) {`,
+        `  <span class="k">const</span> li = document.<span class="v">createElement</span>(<span class="s">"li"</span>);`,
+        `  li.textContent = title;`,
+        `  list.<span class="v">appendChild</span>(li);`,
+        forget ? `  <span class="c">// (forgot to update the count!)</span>` : `  count.textContent = list.children.length;`,
+        `}`,
+      ] }),
+      h("div", { className: "row", style: { marginTop: 12 } }, h("button", { className: "primary", onClick: add }, "+ Add an action")),
+      h("div", { className: "mini" + (mismatch ? " mismatch" : ""), style: { marginTop: 12 } },
+        h("div", null, "Actions logged: ", h("span", { className: "count", ref: countRef })),
+        h("ul", { ref: listRef })),
+      h("div", { className: "stat" }, h("span", null, "DOM changes you wrote by hand"), h("b", null, ops)),
+      mismatch && h("p", { className: "bad", style: { margin: "6px 0 0", fontSize: 14 } }, "Out of sync! The count says one thing, the list says another.")
+    );
+  }
+
+  function ReactSide() {
+    const [actions, setActions] = useState(START);
+    const [flashKey, setFlashKey] = useState(0);
+    function add() {
+      setActions((a) => [...a, IDEAS[(a.length - START.length) % IDEAS.length]]);
+      setFlashKey((k) => k + 1);
+    }
+    return h("div", { className: "box" },
+      h("h3", null, "React: describe what it should look like"),
+      h(Code, { hot: flashKey ? [1] : [], lines: [
+        `<span class="k">function</span> <span class="v">ActionLog</span>() {`,
+        `  <span class="k">const</span> [actions, setActions] = <span class="v">useState</span>(start);`,
+        `  <span class="k">return</span> (<span class="tag">&lt;&gt;</span>`,
+        `    Actions logged: {actions.length}`,
+        `    <span class="tag">&lt;ul&gt;</span>{actions.<span class="v">map</span>(a =&gt; <span class="tag">&lt;li</span> key={a}<span class="tag">&gt;</span>{a}<span class="tag">&lt;/li&gt;</span>)}<span class="tag">&lt;/ul&gt;</span>`,
+        `  <span class="tag">&lt;/&gt;</span>);`,
+        `}`,
+      ] }),
+      h("div", { className: "row", style: { marginTop: 12 } }, h("button", { className: "primary", onClick: add }, "+ Add an action")),
+      h("div", { className: "mini", style: { marginTop: 12 } },
+        h("div", null, "Actions logged: ", h("span", { className: "count" }, actions.length)),
+        h("ul", null, actions.map((a, i) => h("li", { key: i }, a)))),
+      h("div", { className: "stat" }, h("span", null, "DOM changes you wrote by hand"), h("b", null, 0)),
+      h("p", { className: "good", style: { margin: "6px 0 0", fontSize: 14 } }, "The count is worked out from the same data as the list, so they can’t disagree.")
+    );
+  }
+
+  function DomVsReact() {
+    const [forget, setForget] = useState(false);
+    const [resetKey, setResetKey] = useState(0);
+    return h(Fragment, null,
+      h("p", { className: "eyebrow" }, "> section_12 / why_react"),
+      h("h2", null, "DOM vs React"),
+      h("p", { className: "lede" }, "Both sides build the same list. On the left, you tell the browser each step, like in Level II. On the right, you describe what the screen should show for the current data, and React works out the steps."),
+      h("div", { className: "row", style: { marginBottom: 14 } },
+        h("label", { className: "check" }, h("input", { type: "checkbox", checked: forget, onChange: (e) => { setForget(e.target.checked); setResetKey((k) => k + 1); } }), "Simulate a bug: forget one step on the left"),
+        h("button", { onClick: () => setResetKey((k) => k + 1) }, "↺ Reset both")),
+      h("div", { className: "cols", key: resetKey },
+        h(DomSide, { forget }), h(ReactSide)),
+      h("p", { className: "tip" }, h("b", null, "The big idea: "), "in React, the screen is a function of your data. Change the data with setState, and React updates the DOM for you.")
+    );
+  }
+
+  /* ================= 13. Props Flow ================= */
+  function PCard(props) {
+    const [ref, n] = useRenderFlash();
+    const shown = { title: props.title, points: props.points, done: props.done };
+    const changed = useChanged(shown);
+    return h("div", { className: "comp", ref },
+      h("div", { className: "name" }, "<ActionCard>", h("span", { className: "renders" }, `renders: ${n}`)),
+      h(PropsLine, { obj: shown, changed }),
+      h("div", { className: "mini", style: { minHeight: 0, padding: "8px 10px" } },
+        h("b", null, props.title), " · ", props.points, " pts ", props.done ? "✓" : ""));
+  }
+  function PList({ actions }) {
+    const [ref, n] = useRenderFlash();
+    const changed = useChanged({ actions });
+    return h("div", { className: "comp", ref },
+      h("div", { className: "name" }, "<ActionList>", h("span", { className: "renders" }, `renders: ${n}`)),
+      h(PropsLine, { obj: { actions }, changed }),
+      h("div", { className: "kids row3" }, actions.map((a) => h(PCard, { key: a.id, ...a }))));
+  }
+  function PScore({ total }) {
+    const [ref, n] = useRenderFlash();
+    const changed = useChanged({ total });
+    return h("div", { className: "comp", ref },
+      h("div", { className: "name" }, "<ScoreBoard>", h("span", { className: "renders" }, `renders: ${n}`)),
+      h(PropsLine, { obj: { total }, changed }),
+      h("div", { className: "mini", style: { minHeight: 0, padding: "8px 10px", fontSize: 28, fontWeight: 800 } }, total, h("span", { style: { fontSize: 14, fontWeight: 400 } }, " points")));
+  }
+  function PropsFlow() {
+    const [actions, setActions] = useState([
+      { id: 1, title: "Biked to school", points: 20, done: true },
+      { id: 2, title: "Meatless lunch", points: 10, done: true },
+      { id: 3, title: "Reusable bottle", points: 5, done: false },
+    ]);
+    const update = (id, patch) => setActions((list) => list.map((a) => (a.id === id ? { ...a, ...patch } : a)));
+    const total = actions.filter((a) => a.done).reduce((s, a) => s + a.points, 0);
+    return h(Fragment, null,
+      h("p", { className: "eyebrow" }, "> section_13 / props"),
+      h("h2", null, "Props Flow"),
+      h("p", { className: "lede" }, "App owns the data and hands pieces of it down as props. Change the data on the left. Every component inside App re-draws (it flashes), and the props that actually changed light up."),
+      h("div", { className: "cols", style: { gridTemplateColumns: "300px 1fr" } },
+        h("div", { className: "box" },
+          h("h3", null, "App’s data (state)"),
+          actions.map((a) => h("div", { key: a.id, style: { marginBottom: 14 } },
+            h("input", { type: "text", value: a.title, "aria-label": `Title of action ${a.id}`, onChange: (e) => update(a.id, { title: e.target.value }) }),
+            h("div", { className: "row", style: { marginTop: 6 } },
+              h("input", { type: "range", min: 0, max: 40, step: 5, value: a.points, "aria-label": `Points for action ${a.id}`, style: { flex: 1, width: "auto" }, onChange: (e) => update(a.id, { points: Number(e.target.value) }) }),
+              h("span", { className: "code", style: { padding: "2px 8px", fontSize: 12 } }, a.points),
+              h("label", { className: "check" }, h("input", { type: "checkbox", checked: a.done, onChange: (e) => update(a.id, { done: e.target.checked }) }), "done")))),
+          h("p", { className: "muted", style: { margin: 0 } }, "Each change calls setActions with a new array.")),
+        h("div", { className: "comp owner" },
+          h("div", { className: "name" }, "<App>"),
+          h("div", { className: "state" }, `state { actions: [${actions.length} items] }`),
+          h("div", { className: "kids" },
+            h(PScore, { total }),
+            h(PList, { actions })))),
+      h("div", { className: "legend" }, h("span", { className: "ls" }, "state: owned here"), h("span", { className: "lp" }, "props: handed down by the parent"), h("span", { className: "lf" }, "flash: this component just re-drew"), h("span", { className: "lc" }, "highlight: this prop changed")),
+      h("p", { className: "tip" }, h("b", null, "Notice: "), "data only flows down. ActionCard can’t change its own props. To change data, a child calls a function its parent passed down, like onToggle.")
+    );
+  }
+
+  /* ================= 14a. Re-render Visualizer ================= */
+  function RDisplay({ count }) {
+    const [ref, n] = useRenderFlash();
+    return h("div", { className: "comp", ref },
+      h("div", { className: "name" }, "<CountDisplay>", h("span", { className: "renders" }, `renders: ${n}`)),
+      h("div", { className: "props" }, `props { count: ${count} }`),
+      h("div", { style: { fontSize: 30, fontWeight: 800 } }, count));
+  }
+  function RNameTag({ name }) {
+    const [ref, n] = useRenderFlash();
+    return h("div", { className: "comp", ref },
+      h("div", { className: "name" }, "<NameTag>", h("span", { className: "renders" }, `renders: ${n}`)),
+      h("div", { className: "props" }, `props { name: "${name}" }`),
+      h("div", { style: { fontSize: 20, fontWeight: 800 } }, "👋 ", name));
+  }
+  function RFooterPlain() {
+    const [ref, n] = useRenderFlash();
+    return h("div", { className: "comp", ref },
+      h("div", { className: "name" }, "<Footer>", h("span", { className: "renders" }, `renders: ${n}`)),
+      h("div", { className: "props" }, "props { } (none)"),
+      h("div", { className: "muted" }, "Made with React"));
+  }
+  const RFooterMemo = memo(function RFooterMemo() {
+    const [ref, n] = useRenderFlash();
+    return h("div", { className: "comp", ref },
+      h("div", { className: "name" }, "<Footer> (memo)", h("span", { className: "renders" }, `renders: ${n}`)),
+      h("div", { className: "props" }, "props { } (none)"),
+      h("div", { className: "muted" }, "Made with React"));
+  });
+  function RLocal() {
+    const [likes, setLikes] = useState(0);
+    const [ref, n] = useRenderFlash();
+    return h("div", { className: "comp", ref },
+      h("div", { className: "name" }, "<LikeButton>", h("span", { className: "renders" }, `renders: ${n}`)),
+      h("div", { className: "state" }, `state { likes: ${likes} }`),
+      h("button", { onClick: () => setLikes((l) => l + 1) }, `👍 ${likes}`));
+  }
+  function RApp({ useMemo }) {
+    const [count, setCount] = useState(0);
+    const [name, setName] = useState("Sam");
+    const [ref, n] = useRenderFlash();
+    const Footer = useMemo ? RFooterMemo : RFooterPlain;
+    return h(Fragment, null,
+      h("div", { className: "box", style: { marginBottom: 14 } },
+        h("h3", null, "Change some state"),
+        h("div", { className: "row" },
+          h("button", { className: "primary", onClick: () => setCount((c) => c + 1) }, "setCount(count + 1)"),
+          h("button", { onClick: () => setName((v) => (v === "Sam" ? "Priya" : "Sam")) }, "setName(…)"),
+          h("button", { onClick: () => setCount(count) }, "setCount(count): same value"))),
+      h("div", { className: "comp owner", ref },
+        h("div", { className: "name" }, "<App>", h("span", { className: "renders" }, `renders: ${n}`)),
+        h("div", { className: "state" }, `state { count: ${count}, name: "${name}" }`),
+        h("div", { className: "kids row2" }, h(RDisplay, { count }), h(RNameTag, { name })),
+        h("div", { className: "kids row2", style: { marginTop: 10 } }, h(RLocal), h(Footer))));
+  }
+  function Rerender() {
+    const [memoOn, setMemoOn] = useState(false);
+    const [k, setK] = useState(0);
+    return h(Fragment, null,
+      h("p", { className: "eyebrow" }, "> section_14 / state"),
+      h("h2", null, "Re-render Visualizer"),
+      h("p", { className: "lede" }, "When state changes, React re-runs that component and everything inside it, then updates only the parts of the page that actually changed. Each box flashes when it re-renders."),
+      h("div", { className: "row", style: { marginBottom: 14 } },
+        h("label", { className: "check" }, h("input", { type: "checkbox", checked: memoOn, onChange: (e) => { setMemoOn(e.target.checked); setK((x) => x + 1); } }), "Bonus: wrap Footer in React.memo"),
+        h("button", { onClick: () => setK((x) => x + 1) }, "↺ Reset counts")),
+      h(RApp, { key: k, useMemo: memoOn }),
+      h("p", { className: "tip" }, h("b", null, "Try this: "), "change App’s count, then click LikeButton. Which boxes flash each time? Then try setting the same value: React notices nothing changed and skips the re-render.")
+    );
+  }
+
+  /* ================= 14b. Lift the State ================= */
+  const IDEA_LIST = ["Bike to school", "Bus to practice", "Meatless Monday", "Compost scraps", "Unplug chargers", "Reusable bottle"];
+  function SearchBoxLocal() {
+    const [query, setQuery] = useState("");
+    return h("div", { className: "comp owner" },
+      h("div", { className: "name" }, "<SearchBox>"),
+      h("div", { className: "state" }, `state { query: "${query}" }`),
+      h("input", { type: "search", value: query, placeholder: "Type “bike”…", "aria-label": "Search", onChange: (e) => setQuery(e.target.value) }));
+  }
+  function SearchBoxLifted({ query, onQueryChange }) {
+    return h("div", { className: "comp" },
+      h("div", { className: "name" }, "<SearchBox>"),
+      h("div", { className: "props" }, `props { query: "${query}", onQueryChange: ƒ }`),
+      h("input", { type: "search", value: query, placeholder: "Type “bike”…", "aria-label": "Search", onChange: (e) => onQueryChange(e.target.value) }));
+  }
+  function Results({ query }) {
+    const list = query === undefined ? IDEA_LIST : IDEA_LIST.filter((i) => i.toLowerCase().includes(query.trim().toLowerCase()));
+    return h("div", { className: "comp" },
+      h("div", { className: "name" }, "<ResultsList>"),
+      h("div", { className: "props" }, query === undefined ? "props { } (it never hears about the query)" : `props { query: "${query}" }`),
+      h("div", { className: "mini", style: { minHeight: 0 } }, h("ul", { style: { margin: 0 } }, list.map((i) => h("li", { key: i }, i))), !list.length && h("span", null, "No matches")));
+  }
+  function LiftState() {
+    const [mode, setMode] = useState("local");
+    const [query, setQuery] = useState("");
+    const lifted = mode === "lifted";
+    return h(Fragment, null,
+      h("p", { className: "eyebrow" }, "> section_14 / lifting_state"),
+      h("h2", null, "Lift the State"),
+      h("p", { className: "lede" }, "SearchBox and ResultsList are siblings. Type in the search box: does the list filter? Then move the state up to their parent and try again."),
+      h("div", { className: "row", style: { marginBottom: 14 } },
+        h("button", { className: !lifted ? "on" : "", onClick: () => { setMode("local"); setQuery(""); } }, "1 · State inside SearchBox"),
+        h("button", { className: lifted ? "on" : "", onClick: () => { setMode("lifted"); setQuery(""); } }, "2 · State lifted to Parent")),
+      h("div", { className: "cols" },
+        h("div", { className: "comp" + (lifted ? " owner" : "") },
+          h("div", { className: "name" }, "<Parent>"),
+          lifted ? h("div", { className: "state" }, `state { query: "${query}" }`) : h("div", { className: "props" }, "(no state)"),
+          h("div", { className: "kids" },
+            lifted ? h(SearchBoxLifted, { query, onQueryChange: setQuery }) : h(SearchBoxLocal, { key: "local" }),
+            h(Results, { query: lifted ? query : undefined }))),
+        h("div", null,
+          h("div", { className: "box" },
+            h("h3", null, lifted ? "Parent owns the query" : "SearchBox keeps the query to itself"),
+            lifted
+              ? h(Code, { lines: [
+                  `<span class="k">function</span> <span class="v">Parent</span>() {`,
+                  `  <span class="k">const</span> [query, setQuery] = <span class="v">useState</span>(<span class="s">""</span>);`,
+                  `  <span class="k">return</span> (<span class="tag">&lt;&gt;</span>`,
+                  `    <span class="tag">&lt;SearchBox</span> query={query} onQueryChange={setQuery} <span class="tag">/&gt;</span>`,
+                  `    <span class="tag">&lt;ResultsList</span> query={query} <span class="tag">/&gt;</span>`,
+                  `  <span class="tag">&lt;/&gt;</span>);`,
+                  `}`] })
+              : h(Code, { lines: [
+                  `<span class="k">function</span> <span class="v">SearchBox</span>() {`,
+                  `  <span class="k">const</span> [query, setQuery] = <span class="v">useState</span>(<span class="s">""</span>);`,
+                  `  <span class="k">return</span> <span class="tag">&lt;input</span> value={query} … <span class="tag">/&gt;</span>;`,
+                  `}`,
+                  ``,
+                  `<span class="c">// ResultsList can't see query:</span>`,
+                  `<span class="c">// it's trapped inside SearchBox.</span>`] }),
+            h("p", { className: lifted ? "result-ok" : "result-bad", style: { marginBottom: 0 } },
+              lifted ? "✓ Works: both siblings get the query from their shared parent." : "✕ The list never filters. Siblings can’t share state directly.")))),
+      h("p", { className: "tip" }, h("b", null, "Rule of thumb: "), "put state in the closest parent of every component that needs it. In EcoTrack, that’s why the log lives in App: ActionForm, ScoreBoard and ActionList all need it.")
+    );
+  }
+
+  /* ---------------- routing ---------------- */
+  const VIEWS = { "dom-vs-react": DomVsReact, "props-flow": PropsFlow, "rerender": Rerender, "lift-state": LiftState };
+  const current = () => (VIEWS[location.hash.slice(1)] ? location.hash.slice(1) : "dom-vs-react");
+  function Shell() {
+    const [view, setView] = useState(current);
+    useEffect(() => {
+      const on = () => setView(current());
+      addEventListener("hashchange", on);
+      return () => removeEventListener("hashchange", on);
+    }, []);
+    useEffect(() => {
+      document.querySelectorAll("nav a").forEach((a) => {
+        if (a.getAttribute("href") === "#" + view) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+      });
+    }, [view]);
+    return h("section", { className: "panel", key: view }, h(VIEWS[view]));
+  }
+  ReactDOM.createRoot(document.getElementById("root")).render(h(Shell));
+})();
+</script>
+</body>
+</html>
