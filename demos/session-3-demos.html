@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WCTD Level III · Session 3 Interactive Demos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<style>
+  :root {
+    --navy:#12141f; --navy-2:#1a1d2e; --navy-3:#252a40; --slate:#4a5066; --line:#2f3550;
+    --cyan:#00ced1; --cyan-soft:#7fe9ea; --orange:#ffa500; --orange-soft:#ffce7a;
+    --purple:#483d8b; --purple-soft:#a99bff; --paper:#f7f8fc; --red:#ff6b6b; --green:#2ecc71;
+    --heading:"Inter",system-ui,sans-serif; --mono:"JetBrains Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:var(--heading);color:#fff;min-height:100vh;line-height:1.5;
+    background:
+      linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/40px 40px,
+      linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/40px 40px,
+      radial-gradient(ellipse at 75% -10%,#2a2350 0%,var(--navy) 60%) fixed;
+    background-color:var(--navy);}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 24px 48px}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(0,206,209,.15);color:var(--cyan-soft);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+  .pill i{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+  h1{font-weight:800;letter-spacing:-.02em;font-size:clamp(2rem,5vw,3rem);margin:14px 0 4px}
+  h1 span{color:var(--cyan)}
+  .sub{color:rgba(255,255,255,.75);margin:0 0 22px;max-width:720px}
+  nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+  nav a{color:rgba(255,255,255,.8);text-decoration:none;font-weight:600;font-size:14px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+  nav a .n{font-family:var(--mono);color:var(--cyan);margin-right:6px}
+  nav a[aria-current="page"]{background:var(--cyan);color:var(--navy);border-color:var(--cyan)}
+  nav a[aria-current="page"] .n{color:var(--navy)}
+  .panel{background:var(--navy-2);border:1px solid var(--line);border-radius:16px;padding:24px}
+  .eyebrow{font-family:var(--mono);font-size:13px;color:var(--cyan);margin:0}
+  h2{font-weight:800;letter-spacing:-.02em;margin:4px 0 6px;font-size:1.7rem}
+  h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6)}
+  .lede{color:rgba(255,255,255,.75);margin:0 0 18px;max-width:800px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:820px){.cols{grid-template-columns:1fr}}
+  .box{background:var(--navy-3);border-radius:12px;padding:16px;border:1px solid var(--line)}
+  code,.code{font-family:var(--mono)}
+  .code{background:#0d0f18;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;white-space:pre-wrap;color:#e9ecf5;margin:0}
+  .k{color:var(--purple-soft)} .v{color:var(--cyan-soft)} .s{color:var(--orange-soft)} .c{color:#7a819c} .tag{color:#ff9db5}
+  .line{display:block;border-radius:4px;padding:0 4px;margin:0 -4px}
+  .line.hot{background:rgba(255,165,0,.25)}
+  button{font:600 14px var(--heading);border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;padding:8px 14px;cursor:pointer}
+  button:hover{background:rgba(255,255,255,.12)}
+  button.primary{background:var(--orange);color:var(--navy);border-color:var(--orange)}
+  button.on{background:var(--cyan);color:var(--navy);border-color:var(--cyan)}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .tip{margin-top:16px;padding:12px 16px;border-left:3px solid var(--orange);background:rgba(255,165,0,.08);border-radius:0 10px 10px 0;color:rgba(255,255,255,.88)}
+  .tip b{color:var(--orange-soft)}
+  .hidden{display:none}
+  .muted{color:rgba(255,255,255,.6);font-size:14px}
+  .good{color:var(--green)} .bad{color:var(--red)}
+  label.check{display:flex;gap:8px;align-items:center;font-size:14px;color:rgba(255,255,255,.85)}
+  input[type=text],input[type=search]{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#0d0f18;color:#fff;width:100%}
+  input[type=range]{accent-color:var(--cyan);width:100%}
+  /* mini app inside demos */
+  .mini{background:#fbfbfe;color:#1a1d2e;border-radius:10px;padding:12px 14px;min-height:150px}
+  .mini ul{margin:6px 0 0;padding-left:20px}
+  .mini .count{font-weight:800}
+  .mismatch{outline:3px solid var(--red);outline-offset:2px}
+  .stat{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font-size:14px}
+  .stat b{font-size:22px}
+  /* component boxes (props flow, re-render) */
+  .comp{position:relative;border:2px solid var(--line);border-radius:12px;padding:10px 12px 12px;background:rgba(255,255,255,.03);transition:border-color .2s}
+  .comp>.name{font-family:var(--mono);font-weight:600;font-size:14px;color:var(--cyan-soft);display:flex;justify-content:space-between;gap:10px}
+  .comp>.name .renders{color:rgba(255,255,255,.5);font-weight:400;font-size:12px}
+  .comp .props{font-family:var(--mono);font-size:12.5px;color:var(--orange-soft);margin:4px 0 6px;word-break:break-word}
+  .comp .state{font-family:var(--mono);font-size:12.5px;color:#9ff0b8;margin:2px 0 6px}
+  .comp .kids{display:grid;gap:10px;margin-top:6px}
+  .comp .kids.row2{grid-template-columns:1fr 1fr}
+  .comp .kids.row3{grid-template-columns:1fr 1fr 1fr}
+  .flash{animation:flash 900ms ease-out}
+  @keyframes flash{0%{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,165,0,.45);background:rgba(255,165,0,.18)}100%{}}
+  .owner{border-color:#2ecc71}
+  .owner>.name::after{content:"owns state";font-family:var(--heading);font-size:11px;font-weight:700;color:var(--navy);background:var(--green);padding:1px 8px;border-radius:999px;margin-left:auto}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:rgba(255,255,255,.7);margin-top:10px}
+  .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .chg{background:var(--orange);color:var(--navy);border-radius:4px;padding:0 4px}
+  .legend .lc::before{background:var(--orange);outline:2px solid var(--orange-soft)}
+  .legend .lp::before{background:var(--orange-soft)} .legend .ls::before{background:#9ff0b8} .legend .lf::before{background:var(--orange)}
+  .arrow-down{text-align:center;color:rgba(255,255,255,.35);font-size:18px;line-height:1;margin:2px 0}
+  .result-ok{color:var(--green);font-weight:700} .result-bad{color:var(--red);font-weight:700}
+  footer{margin-top:22px;color:rgba(255,255,255,.5);font-size:13px}
+  .err{background:#3a1e24;border:1px solid var(--red);padding:16px;border-radius:12px}
+</style>
+</head>
+<body>
+<style>
+  .timeline{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:420px;overflow:auto}
+  .timeline li{display:grid;grid-template-columns:34px 92px 1fr;gap:8px;align-items:center;font-size:14px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.04)}
+  .timeline .n{font-family:var(--mono);color:rgba(255,255,255,.45);font-size:12px}
+  .ev{font-family:var(--mono);font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;text-align:center;color:var(--navy)}
+  .ev-render{background:#c3c9dd} .ev-effect{background:var(--cyan)} .ev-cleanup{background:var(--orange)} .ev-mount{background:var(--green)} .ev-unmount{background:var(--red)}
+  .ev-start{background:var(--purple-soft)} .ev-done{background:var(--green)} .ev-ignored{background:#7a819c} .ev-fail{background:var(--red)}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{border:0;border-radius:0;background:transparent;font-family:var(--mono);font-size:13px}
+  .seg button.on{background:var(--cyan);color:var(--navy)}
+  .statuspill{display:inline-block;font-family:var(--mono);font-size:13px;font-weight:600;padding:3px 10px;border-radius:999px;color:var(--navy)}
+  .st-idle{background:#c3c9dd} .st-loading{background:var(--orange-soft)} .st-success{background:var(--green)} .st-error{background:var(--red)}
+  .bigaqi{font-size:44px;font-weight:800;line-height:1}
+  .wrongcity{outline:3px solid var(--red);outline-offset:3px;border-radius:10px}
+  .addr{display:flex;align-items:center;gap:8px;background:#0d0f18;border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+  .addr span{font-family:var(--mono);color:rgba(255,255,255,.5);font-size:14px}
+  .addr input{border:0;background:transparent;padding:4px 0;font-family:var(--mono)}
+  .browser{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fbfbfe;color:#1a1d2e}
+  .browser .bnav{display:flex;gap:6px;align-items:center;background:#12141f;padding:8px 12px}
+  .browser .bnav b{color:#fff;margin-right:auto}
+  .browser .bnav a{color:rgba(255,255,255,.8);text-decoration:none;font-size:14px;font-weight:600;padding:5px 10px;border-radius:7px}
+  .browser .bnav a.active{background:var(--cyan);color:var(--navy)}
+  .browser .outlet{padding:16px;min-height:120px;border:2px dashed transparent;margin:10px;border-radius:10px;transition:border-color .2s}
+  .browser .outlet.flash{animation:flash2 900ms ease-out}
+  @keyframes flash2{0%{border-color:var(--orange);background:rgba(255,165,0,.15)}100%{}}
+  .browser .bfoot{font-size:12px;color:#4a5066;padding:8px 14px;border-top:1px solid #e3e5ee;display:flex;justify-content:space-between;align-items:center}
+  .browser .bfoot button{background:#12141f;color:#fff;font-size:12px;padding:4px 10px}
+  table.routes{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13.5px}
+  table.routes td,table.routes th{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+  table.routes th{font-family:var(--heading);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6)}
+  table.routes tr.match td{background:rgba(0,206,209,.18);color:#fff}
+  .form-demo{display:grid;gap:6px}
+  .form-demo label{font-size:14px;font-weight:600}
+  .form-demo textarea{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#0d0f18;color:#fff;min-height:70px}
+  .form-demo .bad{border-color:var(--red)!important}
+  .ferr{color:var(--red);font-size:13px;font-weight:600;margin:0 0 4px}
+  .json{font-family:var(--mono);font-size:13px;white-space:pre-wrap;margin:0}
+  .sent{background:rgba(46,204,113,.15);border:1px solid var(--green);border-radius:10px;padding:12px;color:#c8f7d8}
+</style>
+<div class="wrap">
+  <span class="pill"><i></i>WCTD Level III · Session 3</span>
+  <h1>Real apps, <span>live.</span></h1>
+  <p class="sub">Effects, live data, pages and forms. These demos run real React: click, predict, and watch what happens.</p>
+
+  <nav aria-label="Demos">
+    <a href="#effects"><span class="n">15a</span>Effect Timeline</a>
+    <a href="#fetch"><span class="n">15b</span>Fetch Lifecycle</a>
+    <a href="#router"><span class="n">16a</span>Router Playground</a>
+    <a href="#forms"><span class="n">16b</span>Form Validator</a>
+  </nav>
+
+  <div id="root"></div>
+  <footer>WCTD Level III · Advanced JavaScript &amp; React · Session 3</footer>
+</div>
+
+<script>
+(function () {
+  if (!window.React || !window.ReactDOM) {
+    document.getElementById("root").innerHTML = '<div class="err">React couldn’t load. These demos need an internet connection to download React from cdnjs.</div>';
+    return;
+  }
+  const { useState, useRef, useEffect, useSyncExternalStore, Fragment } = React;
+  const h = React.createElement;
+
+  function Code({ lines, hot = [] }) {
+    return h("pre", { className: "code" }, lines.map((html, i) =>
+      h("span", { key: i, className: hot.includes(i) ? "line hot" : "line", dangerouslySetInnerHTML: { __html: html || " " } })));
+  }
+
+  // A tiny event log that lives outside React, so logging never causes extra renders.
+  function makeLog() {
+    let items = [], listeners = new Set(), n = 0, queued = false;
+    const notify = () => { if (queued) return; queued = true; queueMicrotask(() => { queued = false; listeners.forEach((l) => l()); }); };
+    return {
+      add(type, text) { items = [...items, { id: ++n, type, text }]; notify(); },
+      clear() { items = []; n = 0; notify(); },
+      subscribe(l) { listeners.add(l); return () => listeners.delete(l); },
+      get() { return items; },
+    };
+  }
+  function Timeline({ log, empty }) {
+    const items = useSyncExternalStore(log.subscribe, log.get);
+    const ref = useRef(null);
+    useEffect(() => { if (ref.current) ref.current.scrollTop = ref.current.scrollHeight; }, [items]);
+    if (!items.length) return h("p", { className: "muted" }, empty);
+    return h("ol", { className: "timeline", ref }, items.map((it) =>
+      h("li", { key: it.id }, h("span", { className: "n" }, "#" + it.id), h("span", { className: "ev ev-" + it.type }, it.type), h("span", null, it.text))));
+  }
+
+  /* ================= 15a. Effect Timeline ================= */
+  const effectLog = makeLog();
+  const CITIES = ["Albany", "Mumbai", "Lagos", "Tokyo"];
+
+  function CityWeather({ city, deps }) {
+    effectLog.add("render", `CityWeather renders with city="${city}"`);
+    const effect = () => {
+      effectLog.add("effect", `effect runs: start fetching "${city}"`);
+      return () => effectLog.add("cleanup", `cleanup runs: stop caring about "${city}"`);
+    };
+    // Three versions of the same effect, so you can compare the dependency arrays.
+    if (deps === "none") useEffect(effect);
+    else if (deps === "empty") useEffect(effect, []);
+    else useEffect(effect, [city]);
+    return h("div", { className: "mini", style: { minHeight: 0 } }, h("b", null, "🌤 Weather for " + city));
+  }
+
+  function EffectsDemo() {
+    const [deps, setDeps] = useState("city");
+    const [city, setCity] = useState("Albany");
+    const [likes, setLikes] = useState(0);
+    const [shown, setShown] = useState(true);
+    const [resetKey, setResetKey] = useState(0);
+    const depText = { none: "", empty: ", []", city: ", [city]" }[deps];
+    function changeDeps(d) { effectLog.clear(); setDeps(d); setResetKey((k) => k + 1); setShown(true); }
+    return h(Fragment, null,
+      h("p", { className: "eyebrow" }, "> section_15 / useEffect"),
+      h("h2", null, "Effect Timeline"),
+      h("p", { className: "lede" }, "An effect runs after React draws the screen. The dependency array decides WHEN it runs again, and the cleanup runs before the next effect, or when the component goes away. Pick a dependency array, then click the buttons and read the timeline."),
+      h("div", { className: "cols" },
+        h("div", null,
+          h("div", { className: "box" },
+            h("h3", null, "1 · Choose the dependency array"),
+            h("div", { className: "seg", role: "group", "aria-label": "Dependency array" },
+              ["none", "empty", "city"].map((d) => h("button", { key: d, className: deps === d ? "on" : "", onClick: () => changeDeps(d) }, { none: "no array", empty: "[]", city: "[city]" }[d]))),
+            h("div", { style: { marginTop: 12 } }, h(Code, { hot: [1, 3], lines: [
+              `<span class="v">useEffect</span>(() =&gt; {`,
+              `  <span class="c">// start fetching weather for city</span>`,
+              `  <span class="k">return</span> () =&gt; { <span class="c">/* cleanup */</span> };`,
+              `}${depText});`] }))),
+          h("div", { className: "box", style: { marginTop: 14 } },
+            h("h3", null, "2 · Make something happen"),
+            h("div", { className: "row" },
+              h("button", { className: "primary", onClick: () => setCity((c) => CITIES[(CITIES.indexOf(c) + 1) % CITIES.length]) }, "Change city"),
+              h("button", { onClick: () => setLikes((l) => l + 1) }, `👍 Unrelated state (${likes})`),
+              h("button", { onClick: () => setShown((s) => !s) }, shown ? "Remove the component" : "Add it back")),
+            h("div", { style: { marginTop: 12 } },
+              shown ? h(CityWeather, { key: resetKey, city, deps, likes }) : h("p", { className: "muted" }, "(component removed)")))),
+        h("div", { className: "box" },
+          h("div", { className: "row", style: { justifyContent: "space-between", marginBottom: 8 } }, h("h3", { style: { margin: 0 } }, "Timeline"), h("button", { onClick: () => effectLog.clear() }, "Clear")),
+          h(Timeline, { log: effectLog, empty: "Nothing yet. Click a button." }))),
+      h("p", { className: "tip" }, h("b", null, "Predict first: "), "with [city], what happens when you click the unrelated 👍 button? With no array? With []? Then try removing the component: which runs, the effect or the cleanup?")
+    );
+  }
+
+  /* ================= 15b. Fetch Lifecycle ================= */
+  const fetchLog = makeLog();
+  const DELAYS = { Albany: 600, Mumbai: 1200, Lagos: 900, Tokyo: 2600 };
+  const AQI = { Albany: 31, Mumbai: 152, Lagos: 98, Tokyo: 44 };
+  const label = (a) => a <= 50 ? ["Good", "#2ecc71"] : a <= 100 ? ["Moderate", "#f1c40f"] : a <= 150 ? ["Unhealthy for some", "#ffa500"] : ["Unhealthy", "#ff6b6b"];
+  function fakeFetch(city, fail) {
+    return new Promise((resolve, reject) => setTimeout(() => fail ? reject(new Error("Server error (503)")) : resolve({ city, aqi: AQI[city] }), DELAYS[city]));
+  }
+  function useFakeAirQuality(city, useCleanup, fail) {
+    const [result, setResult] = useState({ status: "idle" });
+    useEffect(() => {
+      if (!city) return;
+      let ignore = false;
+      setResult({ status: "loading" });
+      fetchLog.add("start", `request for ${city} sent (takes ${(DELAYS[city] / 1000).toFixed(1)}s)`);
+      fakeFetch(city, fail).then(
+        (data) => {
+          if (useCleanup && ignore) { fetchLog.add("ignored", `${city} answered, but it’s out of date, so it’s ignored`); return; }
+          fetchLog.add("done", `${city} answered → shown on screen`);
+          setResult({ status: "success", data });
+        },
+        (err) => {
+          if (useCleanup && ignore) { fetchLog.add("ignored", `${city} failed, but it’s out of date, so it’s ignored`); return; }
+          fetchLog.add("fail", `${city}: ${err.message}`);
+          setResult({ status: "error", error: err.message });
+        });
+      return () => { ignore = true; };
+    }, [city, useCleanup, fail]);
+    return result;
+  }
+  function FetchDemo() {
+    const [city, setCity] = useState("");
+    const [useCleanup, setUseCleanup] = useState(false);
+    const [fail, setFail] = useState(false);
+    const r = useFakeAirQuality(city, useCleanup, fail);
+    const wrong = r.status === "success" && r.data.city !== city;
+    return h(Fragment, null,
+      h("p", { className: "eyebrow" }, "> section_15 / live_data"),
+      h("h2", null, "Fetch Lifecycle"),
+      h("p", { className: "lede" }, "Every request has a life: idle → loading → success or error. But what if the user changes their mind before the answer arrives? Tokyo’s server is slow. Click Tokyo, then quickly click Albany."),
+      h("div", { className: "cols" },
+        h("div", null,
+          h("div", { className: "box" },
+            h("h3", null, "Pick a city"),
+            h("div", { className: "row" }, Object.keys(DELAYS).map((c) => h("button", { key: c, className: c === city ? "on" : "", onClick: () => setCity(c) }, `${c} (${(DELAYS[c] / 1000).toFixed(1)}s)`))),
+            h("div", { className: "row", style: { marginTop: 12, gap: 16 } },
+              h("label", { className: "check" }, h("input", { type: "checkbox", checked: useCleanup, onChange: (e) => setUseCleanup(e.target.checked) }), "Use the cleanup (ignore old answers)"),
+              h("label", { className: "check" }, h("input", { type: "checkbox", checked: fail, onChange: (e) => setFail(e.target.checked) }), "Make the server fail"))),
+          h("div", { className: "box" + (wrong ? " wrongcity" : ""), style: { marginTop: 14 } },
+            h("div", { className: "row", style: { justifyContent: "space-between" } },
+              h("h3", { style: { margin: 0 } }, "What the user sees"),
+              h("span", { className: "statuspill st-" + r.status }, r.status)),
+            h("p", { className: "muted", style: { margin: "8px 0" } }, "You picked: ", h("b", { style: { color: "#fff" } }, city || "nothing yet")),
+            r.status === "idle" && h("p", { className: "muted" }, "Pick a city to start."),
+            r.status === "loading" && h("p", null, "Loading…"),
+            r.status === "error" && h("p", { className: "bad" }, "Couldn’t get air quality: " + r.error),
+            r.status === "success" && h("div", null,
+              h("span", { className: "bigaqi", style: { color: label(r.data.aqi)[1] } }, r.data.aqi), " ",
+              h("b", null, label(r.data.aqi)[0]), h("span", { className: "muted" }, ` in ${r.data.city}`)),
+            wrong && h("p", { className: "bad", style: { marginBottom: 0 } }, `Wrong city! You picked ${city}, but ${r.data.city}’s slow answer arrived last and overwrote it.`)),
+          h("div", { style: { marginTop: 14 } }, h(Code, { hot: useCleanup ? [1, 4, 6] : [], lines: [
+            `<span class="v">useEffect</span>(() =&gt; {`,
+            useCleanup ? `  <span class="k">let</span> ignore = <span class="k">false</span>;` : `  <span class="c">// no cleanup</span>`,
+            `  setResult({ status: <span class="s">"loading"</span> });`,
+            `  getAirQuality(city).then((data) =&gt; {`,
+            useCleanup ? `    <span class="k">if</span> (!ignore) setResult({ status: <span class="s">"success"</span>, data });` : `    setResult({ status: <span class="s">"success"</span>, data });`,
+            `  });`,
+            useCleanup ? `  <span class="k">return</span> () =&gt; { ignore = <span class="k">true</span>; };` : ``,
+            `}, [city]);`] }))),
+        h("div", { className: "box" },
+          h("div", { className: "row", style: { justifyContent: "space-between", marginBottom: 8 } }, h("h3", { style: { margin: 0 } }, "Network log"), h("button", { onClick: () => fetchLog.clear() }, "Clear")),
+          h(Timeline, { log: fetchLog, empty: "No requests yet." }))),
+      h("p", { className: "tip" }, h("b", null, "This is a real bug "), "called a race condition. It happens on slow phone connections all the time. The cleanup function fixes it: when city changes, the old effect’s cleanup marks its answer as out of date.")
+    );
+  }
+
+  /* ================= 16a. Router Playground ================= */
+  const ROUTES = [
+    { path: "/", name: "HomePage", title: "Home", body: "The tracker: log actions, see your score and today’s air quality." },
+    { path: "/about", name: "AboutPage", title: "About EcoTrack", body: "The problem, the goals (SDG 3, 11, 13) and who built it." },
+    { path: "/contact", name: "ContactPage", title: "Contact us", body: "A validated form, plus share buttons." },
+    { path: "*", name: "NotFoundPage", title: "Page not found", body: "Nothing lives at this address. Back to the tracker →" },
+  ];
+  const match = (url) => ROUTES.find((r) => r.path === url) || ROUTES[3];
+  function RouterDemo() {
+    const [url, setUrl] = useState("/");
+    const [typed, setTyped] = useState("/");
+    const [count, setCount] = useState(0);
+    const [layoutKey, setLayoutKey] = useState(0);
+    const [flashKey, setFlashKey] = useState(0);
+    const route = match(url);
+    function go(path) { setUrl(path); setTyped(path); setFlashKey((k) => k + 1); }
+    function fullReload(path) { setLayoutKey((k) => k + 1); setCount(0); go(path); }
+    const navLink = (path, text) => h("a", { href: "#router", className: url === path ? "active" : "", onClick: (e) => { e.preventDefault(); go(path); } }, text);
+    return h(Fragment, null,
+      h("p", { className: "eyebrow" }, "> section_16 / pages"),
+      h("h2", null, "Router Playground"),
+      h("p", { className: "lede" }, "A router reads the address and picks which page component to show inside the Layout. Click the nav links or type an address. (This is a mini version of React Router, built to show what it does.)"),
+      h("div", { className: "cols" },
+        h("div", null,
+          h("form", { className: "addr", onSubmit: (e) => { e.preventDefault(); go(typed.startsWith("/") ? typed : "/" + typed); } },
+            h("span", null, "ecotrack.app"),
+            h("input", { type: "text", value: typed, "aria-label": "Address", onChange: (e) => setTyped(e.target.value) }),
+            h("button", { type: "submit" }, "Go")),
+          h("div", { className: "browser", style: { marginTop: 10 }, key: layoutKey },
+            h("div", { className: "bnav" }, h("b", null, "🌱 EcoTrack"), navLink("/", "Home"), navLink("/about", "About"), navLink("/contact", "Contact")),
+            h("div", { className: "outlet flash", key: flashKey },
+              h("p", { style: { margin: "0 0 4px", fontFamily: "var(--mono)", fontSize: 12, color: "#4a5066" } }, `<Outlet /> → <${route.name} />`),
+              h("h3", { style: { margin: "0 0 6px", textTransform: "none", letterSpacing: 0, fontSize: 20, color: "#1a1d2e" } }, route.title),
+              h("p", { style: { margin: 0 } }, route.body)),
+            h("div", { className: "bfoot" },
+              h("span", null, "Layout state (survives navigation): "),
+              h("button", { onClick: () => setCount((c) => c + 1) }, `clicked ${count}×`))),
+          h("div", { className: "row", style: { marginTop: 12 } },
+            h("button", { onClick: () => fullReload(url === "/about" ? "/" : "/about") }, "Navigate with <a href> (full reload)"),
+            h("span", { className: "muted" }, "← watch the counter"))),
+        h("div", null,
+          h("div", { className: "box" },
+            h("h3", null, "Routes in App.jsx"),
+            h("table", { className: "routes" },
+              h("thead", null, h("tr", null, h("th", null, "path"), h("th", null, "element"))),
+              h("tbody", null, ROUTES.map((r) => h("tr", { key: r.path, className: r === route ? "match" : "" }, h("td", null, r.path === "/" ? "index" : `"${r.path.replace("/", "")}"`), h("td", null, `<${r.name} />`)))))),
+          h("div", { style: { marginTop: 14 } }, h(Code, { lines: [
+            `<span class="tag">&lt;Routes&gt;</span>`,
+            `  <span class="tag">&lt;Route</span> element={<span class="tag">&lt;Layout /&gt;</span>}<span class="tag">&gt;</span>`,
+            `    <span class="tag">&lt;Route</span> index element={<span class="tag">&lt;HomePage /&gt;</span>} <span class="tag">/&gt;</span>`,
+            `    <span class="tag">&lt;Route</span> path=<span class="s">"about"</span> element={<span class="tag">&lt;AboutPage /&gt;</span>} <span class="tag">/&gt;</span>`,
+            `    <span class="tag">&lt;Route</span> path=<span class="s">"contact"</span> element={<span class="tag">&lt;ContactPage /&gt;</span>} <span class="tag">/&gt;</span>`,
+            `    <span class="tag">&lt;Route</span> path=<span class="s">"*"</span> element={<span class="tag">&lt;NotFoundPage /&gt;</span>} <span class="tag">/&gt;</span>`,
+            `  <span class="tag">&lt;/Route&gt;</span>`,
+            `<span class="tag">&lt;/Routes&gt;</span>`] })))),
+      h("p", { className: "tip" }, h("b", null, "Try this: "), "click the counter a few times, switch pages with the nav, then use the full-reload button. A NavLink swaps only the Outlet; a full reload starts the whole app over, and the counter resets.")
+    );
+  }
+
+  /* ================= 16b. Form Validator ================= */
+  const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function validate({ name, email, message }) {
+    const e = {};
+    if (!name.trim()) e.name = "Please enter your name.";
+    if (!EMAIL.test(email.trim())) e.email = "Please enter a valid email address.";
+    if (message.trim().length < 20) e.message = "Your message needs at least 20 characters.";
+    return e;
+  }
+  const MODES = { submit: "On submit", blur: "When you leave a field", type: "As you type" };
+  function FormDemo() {
+    const [mode, setMode] = useState("blur");
+    const [values, setValues] = useState({ name: "", email: "", message: "" });
+    const [touched, setTouched] = useState({});
+    const [submitted, setSubmitted] = useState(false);
+    const [sent, setSent] = useState(false);
+    const errors = validate(values);
+    const visible = (field) => submitted || (mode === "type" && values[field] !== "") || (mode === "blur" && touched[field]);
+    const change = (e) => { setValues((v) => ({ ...v, [e.target.name]: e.target.value })); setSent(false); };
+    const blur = (e) => setTouched((t) => ({ ...t, [e.target.name]: true }));
+    function submit(e) { e.preventDefault(); setSubmitted(true); if (!Object.keys(errors).length) setSent(true); }
+    function reset(m) { setMode(m); setValues({ name: "", email: "", message: "" }); setTouched({}); setSubmitted(false); setSent(false); }
+    const field = (name, labelText, multi) => h(Fragment, { key: name },
+      h("label", { htmlFor: "fd-" + name }, labelText),
+      h(multi ? "textarea" : "input", { id: "fd-" + name, name, type: multi ? undefined : "text", value: values[name], onChange: change, onBlur: blur, className: visible(name) && errors[name] ? "bad" : "" }),
+      visible(name) && errors[name] && h("p", { className: "ferr" }, errors[name]));
+    const shownErrors = Object.fromEntries(Object.entries(errors).filter(([k]) => visible(k)));
+    return h(Fragment, null,
+      h("p", { className: "eyebrow" }, "> section_16 / forms"),
+      h("h2", null, "Form Validator"),
+      h("p", { className: "lede" }, "The same validateContact function, shown at three different moments. Which one feels the friendliest to fill in? Try each, then look at the state on the right."),
+      h("div", { className: "row", style: { marginBottom: 14 } }, h("span", { className: "muted" }, "Show errors:"),
+        h("div", { className: "seg", role: "group", "aria-label": "When to show errors" }, Object.entries(MODES).map(([k, v]) => h("button", { key: k, className: mode === k ? "on" : "", onClick: () => reset(k) }, v)))),
+      h("div", { className: "cols" },
+        h("div", { className: "box" },
+          sent ? h("div", { className: "sent" }, h("b", null, `Thanks, ${values.name.trim()}!`), h("p", { style: { margin: "4px 0 0" } }, "Every rule passed, so the form would be sent."))
+            : h("form", { className: "form-demo", onSubmit: submit, noValidate: true },
+                field("name", "Name"), field("email", "Email"), field("message", `Message (${values.message.trim().length}/20)`, true),
+                h("div", { className: "row", style: { marginTop: 6 } }, h("button", { type: "submit", className: "primary" }, "Send message")))),
+        h("div", null,
+          h("div", { className: "box" }, h("h3", null, "values (state)"), h("pre", { className: "json" }, JSON.stringify(values, null, 2))),
+          h("div", { className: "box", style: { marginTop: 14 } }, h("h3", null, "validateContact(values)"), h("pre", { className: "json", style: { color: Object.keys(errors).length ? "var(--orange-soft)" : "var(--green)" } }, JSON.stringify(errors, null, 2))),
+          h("div", { className: "box", style: { marginTop: 14 } }, h("h3", null, "errors shown to the user"), h("pre", { className: "json" }, JSON.stringify(shownErrors, null, 2))))),
+      h("p", { className: "tip" }, h("b", null, "Notice: "), "the errors are always worked out from the values. The only thing that changes is WHEN you show them. Shouting “invalid email!” after one letter feels rude; waiting until the user leaves the field is usually kindest.")
+    );
+  }
+
+  /* ---------------- routing ---------------- */
+  const VIEWS = { effects: EffectsDemo, fetch: FetchDemo, router: RouterDemo, forms: FormDemo };
+  const current = () => (VIEWS[location.hash.slice(1)] ? location.hash.slice(1) : "effects");
+  function Shell() {
+    const [view, setView] = useState(current);
+    useEffect(() => {
+      const on = () => setView(current());
+      addEventListener("hashchange", on);
+      return () => removeEventListener("hashchange", on);
+    }, []);
+    useEffect(() => {
+      document.querySelectorAll("nav a").forEach((a) => {
+        if (a.getAttribute("href") === "#" + view) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+      });
+    }, [view]);
+    return h("section", { className: "panel", key: view }, h(VIEWS[view]));
+  }
+  ReactDOM.createRoot(document.getElementById("root")).render(h(Shell));
+})();
+</script>
+</body>
+</html>
