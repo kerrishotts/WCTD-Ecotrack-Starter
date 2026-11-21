@@ -2,12 +2,6 @@
 //
 // A pure function: it gets the form's values and returns an object with
 // one message per problem. No problems? It returns an empty object {}.
-//
-// TODO (Lab step 4): add a message for each rule that's broken:
-//   name     empty (after trimming spaces)      → "Please enter your name."
-//   email    doesn't match EMAIL_PATTERN         → "Please enter a valid email address."
-//   message  shorter than MIN_MESSAGE_LENGTH     → "Your message needs at least 20 characters."
-//            (after trimming)
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // something@something.something
 
@@ -20,7 +14,15 @@ export const MIN_MESSAGE_LENGTH = 20;
 export function validateContact({ name, email, message }) {
   const errors = {};
 
-  // TODO: check each field and add to errors
+  if (!name.trim()) {
+    errors.name = "Please enter your name.";
+  }
+  if (!EMAIL_PATTERN.test(email.trim())) {
+    errors.email = "Please enter a valid email address.";
+  }
+  if (message.trim().length < MIN_MESSAGE_LENGTH) {
+    errors.message = `Your message needs at least ${MIN_MESSAGE_LENGTH} characters.`;
+  }
 
   return errors;
 }

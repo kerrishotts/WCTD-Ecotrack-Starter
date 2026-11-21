@@ -21,7 +21,8 @@ export default function Layout() {
             <ul className="nav-links">
               {/* NavLink adds class="active" to the link for the current page. */}
               <li><NavLink to="/" end>Home</NavLink></li>
-              {/* TODO (Lab step 3): add NavLinks for About (/about) and Contact (/contact) */}
+              <li><NavLink to="/about">About</NavLink></li>
+              <li><NavLink to="/contact">Contact</NavLink></li>
             </ul>
           </nav>
         </div>

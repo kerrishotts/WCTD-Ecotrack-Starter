@@ -30,11 +30,9 @@ export default function App() {
       {/* Every page shares the Layout: nav at the top, footer at the bottom. */}
       <Route element={<Layout />}>
         <Route index element={<HomePage log={log} onAdd={handleAdd} onToggle={handleToggle} />} />
-
-        {/* TODO (Lab step 3): add three more routes here:
-              "about"   → <AboutPage log={log} />
-              "contact" → <ContactPage />
-              "*"       → <NotFoundPage />   (matches any other address) */}
+        <Route path="about" element={<AboutPage log={log} />} />
+        <Route path="contact" element={<ContactPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );
