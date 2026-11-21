@@ -1,4 +1,5 @@
 // Automatic checks for Lab 2. Run them with:  npm run check:ui
+// (Since Session 3, App needs a router around it, so the tests add a MemoryRouter.)
 //
 // These tests use React Testing Library, which finds things the way a
 // person would: by their text, their label, or their role (button, list
@@ -12,6 +13,7 @@ import ActionCard from "./components/ActionCard.jsx";
 import ActionList from "./components/ActionList.jsx";
 import ScoreBoard from "./components/ScoreBoard.jsx";
 import ActionForm from "./components/ActionForm.jsx";
+import { MemoryRouter } from "react-router";
 import App from "./App.jsx";
 import { sampleLog } from "./data/sampleLog.js";
 
@@ -69,14 +71,14 @@ describe("Step 4 · ScoreBoard and state", () => {
   });
 
   test("marking an action done updates the total", async () => {
-    render(<App />);
+    render(<MemoryRouter><App /></MemoryRouter>);
     const card = screen.getByText("Brought a reusable bottle").closest("li");
     await userEvent.click(within(card).getByRole("button", { name: "Mark done" }));
     expect(screen.getByLabelText("Total points").textContent).toBe("75");
   });
 
   test("the category filter shows only that category", async () => {
-    render(<App />);
+    render(<MemoryRouter><App /></MemoryRouter>);
     await userEvent.click(screen.getByRole("button", { name: "food" }));
     const actions = screen.getByRole("region", { name: "Your actions" });
     expect(within(actions).getAllByRole("listitem")).toHaveLength(1);
@@ -112,7 +114,7 @@ describe("Step 5 · ActionForm", () => {
   });
 
   test("a new action appears in the app's list", async () => {
-    render(<App />);
+    render(<MemoryRouter><App /></MemoryRouter>);
     await userEvent.type(screen.getByLabelText("What did you do?"), "Fixed a leaky tap");
     await userEvent.selectOptions(screen.getByLabelText("Category"), "energy");
     await userEvent.click(screen.getByRole("button", { name: "Add action" }));

@@ -118,3 +118,75 @@ button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
 .exercise .muted { margin: 4px 0 14px; }
 .exercise-output { padding: 16px; border-radius: 10px; background: var(--paper); display: grid; gap: 8px; }
 .exercise-output ul { margin: 6px 0 0; }
+
+/* ===================== Session 3: pages, nav, air quality ===================== */
+.skip-link { position: absolute; left: -9999px; top: 8px; z-index: 10; background: #fff; color: var(--ink); padding: 8px 14px; border-radius: 8px; }
+.skip-link:focus { left: 12px; }
+
+/* ---- Top navigation --------------------------------------------------- */
+.topbar { background: var(--navy); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; }
+.brand { color: #fff; font: 800 1.15rem var(--heading); text-decoration: none; letter-spacing: -0.01em; }
+.nav-links { list-style: none; display: flex; gap: 4px; margin: 0; padding: 0; }
+.nav-links a {
+  display: block; padding: 8px 14px; border-radius: 8px; color: rgba(255, 255, 255, 0.82);
+  font-weight: 600; text-decoration: none;
+}
+.nav-links a:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+.nav-links a.active { background: var(--cyan); color: var(--navy); }
+.nav-links a:focus-visible, .brand:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+/* ---- Page layouts ----------------------------------------------------- */
+.page { margin-top: -48px; padding-bottom: 12px; }
+.page > .layout, .page > .stack, .page > .card { margin-top: 0; }
+.layout { margin-top: 0; }
+.stack { display: grid; gap: 20px; }
+.stack-sm { display: grid; gap: 10px; justify-items: start; }
+.small { font-size: 0.85rem; }
+.capitalize { text-transform: capitalize; }
+.lead-text { font-size: 1.15rem; max-width: 720px; }
+a { color: var(--teal); }
+
+/* ---- Air quality ------------------------------------------------------ */
+.air { border-left-color: var(--green); }
+.air-form { display: grid; gap: 6px; margin: 10px 0 12px; }
+.air-form .row { display: flex; gap: 8px; }
+.air-form button { padding: 10px 18px; background: var(--orange); color: var(--navy); }
+.air-form button:disabled { opacity: 0.45; cursor: not-allowed; }
+.aqi { display: flex; align-items: baseline; gap: 12px; margin: 4px 0; }
+.aqi-number { font: 800 3.2rem/1 var(--heading); color: var(--aqi-color); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15); }
+.aqi-label { font-weight: 700; }
+.error { color: #c0392b; font-weight: 600; }
+
+/* ---- About ------------------------------------------------------------ */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px; }
+@media (max-width: 640px) { .stats { grid-template-columns: 1fr; } }
+.stat { background: var(--paper); border-radius: 10px; padding: 14px 16px; display: grid; }
+.stat-number { font: 800 2rem/1.1 var(--heading); }
+.goals { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 12px; }
+.goals li { display: flex; gap: 14px; align-items: flex-start; }
+.goal-number { flex: none; font: 700 0.8rem var(--mono); background: var(--navy); color: var(--cyan-soft); padding: 6px 10px; border-radius: 8px; }
+.goals p { margin: 2px 0 0; }
+.points-table { border-collapse: collapse; margin-top: 10px; min-width: 280px; }
+.points-table th, .points-table td { text-align: left; padding: 6px 14px 6px 0; border-bottom: 1px solid var(--line); }
+
+/* ---- Contact ---------------------------------------------------------- */
+.contact-form { display: grid; gap: 14px; border-left-color: var(--purple); }
+.field { display: grid; gap: 4px; }
+.field p { margin: 0; }
+textarea { font: inherit; padding: 10px 12px; border: 2px solid #d9dbe6; border-radius: 8px; resize: vertical; width: 100%; }
+textarea:focus { outline: none; border-color: var(--cyan); }
+[aria-invalid="true"] { border-color: #c0392b; }
+.field-error { color: #c0392b; font-weight: 600; font-size: 0.9rem; }
+.stack-sm button, .contact-form button[type="submit"] { padding: 11px 18px; background: var(--orange); color: var(--navy); justify-self: start; }
+
+/* ---- Social ----------------------------------------------------------- */
+.social { margin: 6px 0 14px; }
+.social-title { font-weight: 700; color: var(--ink); margin: 0 0 8px; }
+.social-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+a.chip { display: inline-block; text-decoration: none; border-radius: 8px; font-size: 0.9rem; text-transform: none; }
+.chip--follow { background: var(--navy); color: #fff; }
+.exercise-section { grid-column: 1 / -1; color: var(--ink); margin: 8px 0 -6px; }
+.exercise-grid > .exercise-section:first-child { color: #fff; margin: 0 0 -6px; }
+.contact-layout { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+@media (max-width: 820px) { .contact-layout { grid-template-columns: 1fr; } }

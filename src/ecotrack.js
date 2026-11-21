@@ -116,3 +116,17 @@ export function newAction({ title, category }, { id, date }) {
     done: false,
   };
 }
+
+// ---------------------------------------------------------------------------
+// Added in Session 3: for the About page.
+// ---------------------------------------------------------------------------
+
+/**
+ * Kilograms of CO2 saved by DONE actions, rounded to one decimal place.
+ * @param {object[]} log
+ * @returns {number}
+ */
+export function co2Saved(log) {
+  const total = log.filter((a) => a.done).reduce((sum, a) => sum + a.co2Kg, 0);
+  return Math.round(total * 10) / 10;
+}

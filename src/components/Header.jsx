@@ -8,7 +8,7 @@ export default function Header({ title, tagline }) {
       <div className="wrap">
         <p className="pill">
           <span className="dot" />
-          WCTD Level III · Session 2
+          Built at the WCTD Hack-A-Thon
         </p>
         <h1>
           {title} <span className="accent">{tagline}</span>

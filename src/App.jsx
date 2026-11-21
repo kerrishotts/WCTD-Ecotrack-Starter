@@ -1,39 +1,20 @@
-// App owns the data. Every other component gets what it needs as props.
+// App owns the data and decides which page to show for each address.
 
-import { useState, useEffect } from "react";
-import Header from "./components/Header.jsx";
-import ActionForm from "./components/ActionForm.jsx";
-import ScoreBoard from "./components/ScoreBoard.jsx";
-import CategoryFilter from "./components/CategoryFilter.jsx";
-import ActionList from "./components/ActionList.jsx";
+import { Routes, Route } from "react-router";
+import Layout from "./components/Layout.jsx";
+import HomePage from "./pages/HomePage.jsx";
+import AboutPage from "./pages/AboutPage.jsx";
+import ContactPage from "./pages/ContactPage.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
+import { useLocalStorage } from "./hooks/useLocalStorage.js";
 import { sampleLog } from "./data/sampleLog.js";
-import { addAction, toggleDone, filterByCategory, newAction } from "./ecotrack.js";
+import { addAction, toggleDone, newAction } from "./ecotrack.js";
 
-const STORAGE_KEY = "ecotrack-log";
 const today = () => new Date().toISOString().slice(0, 10);
 
-// STRETCH: start from the saved log if there is one.
-function loadLog() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : sampleLog;
-  } catch {
-    return sampleLog;
-  }
-}
-
 export default function App() {
-  const [log, setLog] = useState(loadLog);
-  const [category, setCategory] = useState("all");
-
-  // STRETCH: save the log whenever it changes (more on useEffect in Session 3).
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
-    } catch {
-      // storage can be unavailable (private browsing); the app still works
-    }
-  }, [log]);
+  // Like useState, but saved in the browser (see hooks/useLocalStorage.js).
+  const [log, setLog] = useLocalStorage("ecotrack-log", sampleLog);
 
   function handleToggle(id) {
     setLog((current) => toggleDone(current, id));
@@ -44,27 +25,17 @@ export default function App() {
     setLog((current) => addAction(current, action));
   }
 
-  const visible = filterByCategory(log, category);
-
   return (
-    <>
-      <Header title="EcoTrack." tagline="Small actions, big impact." />
-      <main className="wrap layout">
-        <div className="side">
-          <ActionForm onAdd={handleAdd} />
-          <ScoreBoard log={log} />
-        </div>
-        <section className="card" aria-labelledby="actions-title">
-          <div className="list-head">
-            <h2 id="actions-title">Your actions</h2>
-            <CategoryFilter value={category} onChange={setCategory} />
-          </div>
-          <ActionList actions={visible} onToggle={handleToggle} />
-        </section>
-      </main>
-      <footer className="wrap footer">
-        EcoTrack supports UN SDGs 3, 11 and 13 · Session 1 engine room: <a href="/engine.html">/engine.html</a>
-      </footer>
-    </>
+    <Routes>
+      {/* Every page shares the Layout: nav at the top, footer at the bottom. */}
+      <Route element={<Layout />}>
+        <Route index element={<HomePage log={log} onAdd={handleAdd} onToggle={handleToggle} />} />
+
+        {/* TODO (Lab step 3): add three more routes here:
+              "about"   → <AboutPage log={log} />
+              "contact" → <ContactPage />
+              "*"       → <NotFoundPage />   (matches any other address) */}
+      </Route>
+    </Routes>
   );
 }

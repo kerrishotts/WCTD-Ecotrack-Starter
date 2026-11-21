@@ -10,6 +10,8 @@
     "preview": "vite preview",
     "check": "node scripts/run-checks.js",
     "check:ui": "vitest run --reporter=verbose",
+    "check:lab2": "vitest run --reporter=verbose src/lab2.test.jsx",
+    "check:lab3": "vitest run --reporter=verbose src/lab3.test.jsx",
     "test": "vitest"
   },
   "devDependencies": {
@@ -22,6 +24,10 @@
   },
   "dependencies": {
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "react-router": "^8.5.2"
+  },
+  "engines": {
+    "node": ">=22.22.0"
   }
 }
